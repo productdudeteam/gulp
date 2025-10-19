@@ -69,52 +69,6 @@ const data = {
         },
       ],
     },
-    {
-      title: "Documentation",
-      url: "/dashboard/docs",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Overview",
-          url: "/dashboard/docs",
-        },
-        {
-          title: "Hooks & Utilities",
-          url: "/dashboard/docs/hooks",
-        },
-        {
-          title: "State Management",
-          url: "/dashboard/docs/state",
-        },
-        {
-          title: "UI Components",
-          url: "/dashboard/docs/components",
-        },
-        {
-          title: "Chat Thread",
-          url: "/dashboard/docs/chat",
-        },
-        {
-          title: "Authentication",
-          url: "/dashboard/docs/auth",
-        },
-        {
-          title: "Error Handling",
-          url: "/dashboard/docs/errors",
-        },
-      ],
-    },
-    {
-      title: "Components",
-      url: "/dashboard/components",
-      icon: Palette,
-      items: [
-        {
-          title: "Chat Thread",
-          url: "/dashboard/components/chat",
-        },
-      ],
-    },
   ],
   history: [
     {

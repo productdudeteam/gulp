@@ -1,0 +1,9 @@
+# Python virtual environment
+.venv/
+venv/
+
+# VS Code settings
+.vscode/
+
+# Cursor IDE settings
+.cursor/

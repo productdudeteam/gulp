@@ -76,7 +76,7 @@ We'll implement one feature group at a time, building backend APIs first, then t
 
 **Goal**: Users can generate and manage widget tokens for embedding bots on websites.
 
-**Status**: ✅ **Backend Complete** | ⏳ Frontend Pending
+**Status**: ✅ **COMPLETE** (Backend ✅ | Frontend ✅)
 
 #### Backend (FastAPI) ✅
 
@@ -93,16 +93,18 @@ We'll implement one feature group at a time, building backend APIs first, then t
 -   [x] RLS policies for token access
 -   [x] Service role support for public widget validation
 
-#### Frontend (Next.js)
+#### Frontend (Next.js) ✅
 
--   [ ] Widget token types/interfaces
--   [ ] React Query hooks for widget tokens
--   [ ] Token list component
--   [ ] Generate token form (with domain whitelist)
--   [ ] Copy token to clipboard functionality
--   [ ] Token expiration display
--   [ ] Revoke token button
--   [ ] Widget setup page (`/dashboard/bots/:id/widget`)
+-   [x] Widget token types/interfaces
+-   [x] React Query hooks for widget tokens
+-   [x] Token list component
+-   [x] Generate token form (with domain whitelist)
+-   [x] Copy token to clipboard functionality
+-   [x] Token expiration display
+-   [x] Revoke token button
+-   [x] Widget management tab in bot settings page
+-   [x] One-time token display with security warnings
+-   [x] Token usage instructions and help text
 
 **Dependencies**: Phase 1 (Bot Management) ✅
 
@@ -119,6 +121,18 @@ We'll implement one feature group at a time, building backend APIs first, then t
 -   Authorization checks ensure users can only manage their own bot tokens
 -   Postman collection updated for testing
 
+**Frontend Completion Notes** (✅ Done):
+
+-   All UI components implemented and integrated
+-   Widget token management tab added to bot settings page
+-   Token list with expiration status, domain badges, and last used timestamps
+-   Create token dialog with domain whitelist management
+-   One-time token display with copy functionality and security warnings
+-   Revoke token confirmation dialog
+-   Responsive design with loading and error states
+-   Toast notifications for all actions
+-   Help text and usage instructions included
+
 **Acceptance Criteria**:
 
 -   ✅ Backend: Users can generate widget tokens for their bots
@@ -128,8 +142,11 @@ We'll implement one feature group at a time, building backend APIs first, then t
 -   ✅ Backend: Users can revoke tokens
 -   ✅ Backend: Token hash is stored securely (never plain text)
 -   ✅ Backend: Plain token shown only once during creation
--   ⏳ Frontend: Users can generate tokens via UI
--   ⏳ Frontend: Users can view and manage tokens in bot settings
+-   ✅ Frontend: Users can generate tokens via UI
+-   ✅ Frontend: Users can view and manage tokens in bot settings
+-   ✅ Frontend: Token copy functionality works
+-   ✅ Frontend: Expiration status and last used timestamps displayed
+-   ✅ Frontend: Domain whitelist management in create dialog
 
 ---
 

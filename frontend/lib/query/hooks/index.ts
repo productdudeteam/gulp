@@ -4,3 +4,4 @@ export * from "./profile";
 export * from "./bots";
 export * from "./widget-tokens";
 export * from "./sources";
+export * from "./chunks";

@@ -23,6 +23,8 @@ class QueryRequest(BaseModel):
     query_text: str = Field(..., min_length=1)
     top_k: Optional[int] = Field(default=5, ge=1, le=20)
     min_score: Optional[float] = Field(default=0.25, ge=0.0, le=1.0)
+    session_id: Optional[str] = Field(default=None, description="Client session identifier")
+    page_url: Optional[str] = Field(default=None, description="Origin URL of query")
 
 
 @query_router.post("/bots/{bot_id}/query")
@@ -49,8 +51,11 @@ async def query_bot(request: Request, bot_id: UUID, body: QueryRequest):
             query_text=body.query_text,
             top_k=body.top_k or 5,
             min_score=body.min_score or 0.25,
+            session_id=body.session_id,
+            page_url=body.page_url,
         )
-        return {"status": "success", "data": result}
+        # Attach echo of session/page for clients
+        return {"status": "success", "data": {**result, "session_id": body.session_id, "page_url": body.page_url}}
 
     except ValidationError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

@@ -538,7 +538,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"query_text\": \"What does this bot know about our docs?\",\n  \"top_k\": 5,\n  \"min_score\": 0.25\n}"
+                            "raw": "{\n  \"query_text\": \"What does this bot know about our docs?\",\n  \"top_k\": 5,\n  \"min_score\": 0.25,\n  \"session_id\": \"dev-session-123\",\n  \"page_url\": \"https://localhost/test\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/query",

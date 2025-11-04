@@ -522,6 +522,35 @@
                 }
             ],
             "description": "Chunk management endpoints for viewing chunks created from sources"
+        },
+        {
+            "name": "Query (RAG)",
+            "item": [
+                {
+                    "name": "Ask Bot",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"query_text\": \"What does this bot know about our docs?\",\n  \"top_k\": 5,\n  \"min_score\": 0.25\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/query",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "bots", "{{bot_id}}", "query"]
+                        },
+                        "description": "Run a RAG query against a bot. Returns retrieval-only answer with citations; generation comes next."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "RAG query endpoint"
         }
     ],
     "event": [

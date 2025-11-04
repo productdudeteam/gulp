@@ -1,0 +1,72 @@
+from typing import List, Optional, Dict, Any
+from uuid import UUID
+import logging
+
+from config.supabasedb import get_supabase_client
+from services.embedding_service import EmbeddingService
+from core.exceptions import ValidationError, DatabaseError
+
+logger = logging.getLogger(__name__)
+
+
+class RagService:
+    def __init__(self, access_token: Optional[str] = None):
+        self.access_token = access_token
+        self.db = get_supabase_client(access_token=access_token)
+        self.embedding = EmbeddingService(access_token=access_token)
+
+    def retrieve(self, bot_id: UUID, query_text: str, top_k: int = 5, min_score: float = 0.25) -> List[Dict[str, Any]]:
+        if not query_text or not query_text.strip():
+            raise ValidationError("query_text is required")
+
+        # Embed query (single-vector batch)
+        vectors, provider = self.embedding._embed_with_fallback([query_text])
+        query_vec = vectors[0]
+        logger.info(f"Query embedded using provider {provider}")
+
+        # Call SQL function search_similar_chunks(bot_id, embedding, threshold, limit)
+        try:
+            # Supabase Python client: use rpc with exact SQL arg names
+            response = self.db.rpc(
+                "search_similar_chunks",
+                {
+                    "bot_uuid": str(bot_id),
+                    "query_embedding": query_vec,
+                    "match_threshold": float(min_score),
+                    "match_count": int(top_k),
+                },
+            ).execute()
+
+            data = response.data or []
+            logger.info(f"Retrieved {len(data)} chunks for query")
+            return data
+        except Exception as e:
+            logger.error(f"Error during retrieval: {str(e)}")
+            raise DatabaseError(f"Retrieval failed: {str(e)}")
+
+    def answer(self, bot_id: UUID, query_text: str, top_k: int = 5, min_score: float = 0.25) -> Dict[str, Any]:
+        chunks = self.retrieve(bot_id, query_text, top_k=top_k, min_score=min_score)
+        # Compose prompt (simple): include top chunks as context
+        context = "\n\n".join([c.get("excerpt", "") for c in chunks])
+        citations = [
+            {
+                "chunk_id": c.get("id"),
+                "heading": c.get("heading"),
+                "score": c.get("similarity"),
+            }
+            for c in chunks
+        ]
+
+        # For now, return retrieval-only answer to enable testing
+        answer_text = (
+            "[Retrieval-only] Top results included in context. "
+            "LLM answer generation will be wired next."
+        )
+
+        return {
+            "answer": answer_text,
+            "citations": citations,
+            "context_preview": context[:1000],
+        }
+
+

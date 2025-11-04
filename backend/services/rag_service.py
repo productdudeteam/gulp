@@ -4,6 +4,8 @@ import logging
 
 from config.supabasedb import get_supabase_client
 from services.embedding_service import EmbeddingService
+from services.llm_service import LLMService
+from services.bot_service import BotService
 from core.exceptions import ValidationError, DatabaseError
 
 logger = logging.getLogger(__name__)
@@ -44,9 +46,9 @@ class RagService:
             logger.error(f"Error during retrieval: {str(e)}")
             raise DatabaseError(f"Retrieval failed: {str(e)}")
 
-    def answer(self, bot_id: UUID, query_text: str, top_k: int = 5, min_score: float = 0.25) -> Dict[str, Any]:
+    def answer(self, bot_id: UUID, user_id: Optional[str], query_text: str, top_k: int = 5, min_score: float = 0.25) -> Dict[str, Any]:
+        # Retrieve context
         chunks = self.retrieve(bot_id, query_text, top_k=top_k, min_score=min_score)
-        # Compose prompt (simple): include top chunks as context
         context = "\n\n".join([c.get("excerpt", "") for c in chunks])
         citations = [
             {
@@ -57,11 +59,23 @@ class RagService:
             for c in chunks
         ]
 
-        # For now, return retrieval-only answer to enable testing
-        answer_text = (
-            "[Retrieval-only] Top results included in context. "
-            "LLM answer generation will be wired next."
+        # Fetch bot to verify ownership and get system_prompt
+        bot_service = BotService()
+        bot = None
+        if user_id:
+            bot = bot_service.get_bot(str(bot_id), str(user_id), access_token=self.access_token)
+        system_prompt = (bot or {}).get("system_prompt") if isinstance(bot, dict) else None
+        system_prompt = system_prompt or "You are a helpful assistant. Use the provided context to answer. If unsure, say you don't know."
+
+        prompt = (
+            f"System prompt: {system_prompt}\n\n"
+            f"Context:\n{context}\n\n"
+            f"User question: {query_text}\n\n"
+            f"Answer concisely and cite sources by heading if helpful."
         )
+
+        llm = LLMService()
+        answer_text = llm.generate(prompt)
 
         return {
             "answer": answer_text,

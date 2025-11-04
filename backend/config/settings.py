@@ -48,6 +48,11 @@ class Settings(BaseSettings):
     crawler_min_content_chars: int = Field(default=500, env="CRAWLER_MIN_CONTENT_CHARS")
     crawler_max_depth: int = Field(default=1, env="CRAWLER_MAX_DEPTH")
     crawler_max_pages: int = Field(default=10, env="CRAWLER_MAX_PAGES")
+
+    # LLM generation settings
+    llm_preferred: str = Field(default="gemini", env="LLM_PREFERRED")
+    openai_chat_model: str = Field(default="gpt-4o-mini", env="OPENAI_CHAT_MODEL")
+    gemini_chat_model: str = Field(default="gemini-2.5-flash", env="GEMINI_CHAT_MODEL")
     
     class Config:
         env_file = ".env"

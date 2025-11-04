@@ -205,7 +205,7 @@ export default function BotSettingsForm({ bot }: BotSettingsFormProps) {
               <p className="text-xs text-muted-foreground">
                 {formData.llm_provider === "openai"
                   ? "e.g., gpt-4o, gpt-4-turbo, gpt-3.5-turbo"
-                  : "e.g., gemini-1.5-pro, gemini-1.5-flash"}
+                  : "e.g., gemini-1.5-pro, gemini-2.5-flash"}
               </p>
             </div>
 

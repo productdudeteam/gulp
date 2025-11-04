@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,10 +18,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui";
-import { useCreateBot } from "@/lib/query/hooks/bots";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useNotifications } from "@/lib/hooks/use-notifications";
+import { useCreateBot } from "@/lib/query/hooks/bots";
 import type { BotCreateInput, LLMProvider } from "@/lib/types/bot";
-import { useRouter } from "next/navigation";
 
 interface BotCreateDialogProps {
   open: boolean;
@@ -63,7 +63,10 @@ export default function BotCreateDialog({
 
     createBot.mutate(formData, {
       onSuccess: (newBot) => {
-        success("Bot Created", `"${newBot.name}" has been created successfully`);
+        success(
+          "Bot Created",
+          `"${newBot.name}" has been created successfully`
+        );
         onOpenChange(false);
         // Reset form
         setFormData({
@@ -211,7 +214,7 @@ export default function BotCreateDialog({
                 <p className="text-xs text-muted-foreground">
                   {formData.llm_provider === "openai"
                     ? "e.g., gpt-4o, gpt-4-turbo, gpt-3.5-turbo"
-                    : "e.g., gemini-1.5-pro, gemini-1.5-flash"}
+                    : "e.g., gemini-1.5-pro, gemini-2.5-flash"}
                 </p>
               </div>
 
@@ -295,7 +298,11 @@ export default function BotCreateDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={createBot.isPending} className="gap-2">
+            <Button
+              type="submit"
+              disabled={createBot.isPending}
+              className="gap-2"
+            >
               <Plus className="h-4 w-4" />
               {createBot.isPending ? "Creating..." : "Create Bot"}
             </Button>
@@ -305,4 +312,3 @@ export default function BotCreateDialog({
     </Dialog>
   );
 }
-

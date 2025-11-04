@@ -37,9 +37,15 @@ async def query_bot(request: Request, bot_id: UUID, body: QueryRequest):
         except Exception:
             pass
 
+        user_data = request.state.user
+        user_id = getattr(user_data, 'id', None)
+        if not user_id:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User ID not found in token")
+
         rag = RagService(access_token=access_token)
         result = rag.answer(
             bot_id=bot_id,
+            user_id=str(user_id),
             query_text=body.query_text,
             top_k=body.top_k or 5,
             min_score=body.min_score or 0.25,

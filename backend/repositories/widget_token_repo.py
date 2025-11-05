@@ -24,9 +24,14 @@ class WidgetTokenRepository:
         Initialize the repository with a Supabase client.
         
         Args:
-            access_token: User's JWT token for RLS-enabled operations
+            access_token: User's JWT token for RLS-enabled operations.
+                         If None, uses service role (for widget token validation).
         """
-        self.client = get_supabase_client(access_token=access_token)
+        # For widget token validation (access_token=None), use service role
+        if access_token is None:
+            self.client = get_supabase_client(use_service_role=True)
+        else:
+            self.client = get_supabase_client(access_token=access_token)
         self.access_token = access_token
 
     def create_token(

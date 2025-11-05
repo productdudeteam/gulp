@@ -11,7 +11,11 @@ logger = logging.getLogger(__name__)
 
 class QueryRepository:
     def __init__(self, access_token: Optional[str] = None):
-        self.client = get_supabase_client(access_token=access_token)
+        # For widget queries (access_token=None), use service role
+        if access_token is None:
+            self.client = get_supabase_client(use_service_role=True)
+        else:
+            self.client = get_supabase_client(access_token=access_token)
 
     def create_query(
         self,

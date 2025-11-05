@@ -17,10 +17,20 @@ logger = logging.getLogger(__name__)
 class RagService:
     def __init__(self, access_token: Optional[str] = None):
         self.access_token = access_token
-        self.db = get_supabase_client(access_token=access_token)
-        self.embedding = EmbeddingService(access_token=access_token)
-        self.query_repo = QueryRepository(access_token=access_token)
-        self.source_repo = SourceRepository(access_token=access_token)
+        # For widget queries (access_token=None), use service role
+        if access_token is None:
+            self.db = get_supabase_client(use_service_role=True)
+            # Embedding service can work without access_token (uses service role internally if needed)
+            self.embedding = EmbeddingService(access_token=None)
+            self.query_repo = QueryRepository(access_token=None)
+            # SourceRepository is only used when include_metadata=True (widget queries use False)
+            # So we don't need to initialize it for widget queries - lazy initialization if needed
+            self.source_repo = None  # Will be initialized lazily if include_metadata=True
+        else:
+            self.db = get_supabase_client(access_token=access_token)
+            self.embedding = EmbeddingService(access_token=access_token)
+            self.query_repo = QueryRepository(access_token=access_token)
+            self.source_repo = SourceRepository(access_token=access_token)
 
     def retrieve(self, bot_id: UUID, query_text: str, top_k: int = 5, min_score: float = 0.25) -> List[Dict[str, Any]]:
         if not query_text or not query_text.strip():
@@ -80,6 +90,11 @@ class RagService:
                     chunk_source_map[c.get("id")] = source_id
             
             # Batch fetch sources
+            # Note: Widget queries always use include_metadata=False, so this code only runs for authenticated queries
+            # Lazy initialize source_repo if needed
+            if self.source_repo is None:
+                self.source_repo = SourceRepository(access_token=self.access_token)
+            
             sources_map = {}
             for source_id in source_ids:
                 try:
@@ -128,7 +143,19 @@ class RagService:
         bot_service = BotService()
         bot = None
         if user_id:
+            # Authenticated user query: verify ownership
             bot = bot_service.get_bot(str(bot_id), str(user_id), access_token=self.access_token)
+        else:
+            # Widget query: get bot without ownership check (token already validates access)
+            # Use service role to bypass RLS
+            from config.supabasedb import get_supabase_client
+            service_db = get_supabase_client(use_service_role=True)
+            try:
+                result = service_db.table("bots").select("*").eq("id", str(bot_id)).single().execute()
+                bot = result.data if result.data else None
+            except Exception as e:
+                logger.warning(f"Failed to fetch bot for widget query: {e}")
+        
         system_prompt = (bot or {}).get("system_prompt") if isinstance(bot, dict) else None
         system_prompt = system_prompt or "You are a helpful assistant. Use the provided context to answer. If unsure, say you don't know."
 

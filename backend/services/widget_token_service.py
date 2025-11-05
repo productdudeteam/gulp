@@ -172,25 +172,47 @@ class WidgetTokenService:
                     logger.warning(f"Token {token_data['id']} has expired")
                     return None
 
-            # Check domain whitelist if origin provided
-            if origin:
-                allowed_domains = token_data.get("allowed_domains", [])
-                origin_normalized = origin.rstrip("/")
-                
-                # Check if origin matches any allowed domain
-                domain_match = False
-                for domain in allowed_domains:
-                    domain_normalized = domain.rstrip("/")
-                    # Exact match or subdomain match
-                    if (origin_normalized == domain_normalized or
-                        origin_normalized.endswith(f".{domain_normalized}") or
-                        origin_normalized.startswith(domain_normalized)):
-                        domain_match = True
-                        break
+            # Check domain whitelist
+            allowed_domains = token_data.get("allowed_domains", [])
+            
+            # Check if we're in development mode (allows origin=None for testing)
+            from config.settings import settings
+            is_dev = settings.environment.lower() in ["dev", "local"]
+            
+            # If token has allowed_domains configured, origin validation is required
+            if allowed_domains:
+                if not origin:
+                    # Origin is required when allowed_domains are set (unless dev mode)
+                    if not is_dev:
+                        logger.warning(f"Origin required for token {token_data['id']} with allowed_domains")
+                        return None
+                    # In dev mode, allow origin=None for testing even with allowed_domains
+                    logger.debug(f"Dev mode: Allowing origin=None for token {token_data['id']} with allowed_domains")
+                else:
+                    # Origin provided - validate it matches allowed domains
+                    origin_normalized = origin.rstrip("/")
+                    
+                    # Check if origin matches any allowed domain
+                    domain_match = False
+                    for domain in allowed_domains:
+                        domain_normalized = domain.rstrip("/")
+                        # Exact match or subdomain match
+                        if (origin_normalized == domain_normalized or
+                            origin_normalized.endswith(f".{domain_normalized}") or
+                            origin_normalized.startswith(domain_normalized)):
+                            domain_match = True
+                            break
 
-                if not domain_match:
-                    logger.warning(f"Origin {origin} not in allowed domains for token {token_data['id']}")
+                    if not domain_match:
+                        logger.warning(f"Origin {origin} not in allowed domains for token {token_data['id']}")
+                        return None
+            else:
+                # If no allowed_domains configured, check environment
+                if not origin and not is_dev:
+                    # In production, origin is required even if no domain restrictions
+                    logger.warning(f"Origin required in production for token {token_data['id']}")
                     return None
+                # In dev mode, allow origin=None for tokens without domain restrictions
 
             # Update last_used_at
             self.repository.update_last_used(UUID(token_data["id"]))

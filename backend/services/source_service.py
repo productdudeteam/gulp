@@ -249,6 +249,7 @@ class SourceService:
         # Delete file from storage if it's a file source (not URL)
         if source_type in (SourceType.PDF.value, SourceType.DOCX.value, SourceType.TEXT.value) and storage_path:
             try:
+                # TODO: check why service role and not token?
                 # Use service role to delete from storage (we've already verified ownership)
                 storage_client = get_supabase_client(use_service_role=True)
                 

@@ -11,6 +11,7 @@ from uuid import UUID
 import logging
 
 from middleware.auth_guard import auth_guard
+from middleware.widget_token_guard import widget_token_guard
 from services.rag_service import RagService
 from starlette.concurrency import run_in_threadpool
 from core.exceptions import ValidationError, DatabaseError, AuthorizationError
@@ -70,6 +71,57 @@ async def query_bot(request: Request, bot_id: UUID, body: QueryRequest):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     except Exception as e:
         logger.error(f"Unexpected error querying bot: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unexpected error")
+
+
+@query_router.post("/widget/query")
+@widget_token_guard
+async def query_bot_widget(request: Request, body: QueryRequest):
+    """
+    Public widget query endpoint.
+    Validates widget token and returns RAG answer.
+    No user authentication required (token-based).
+    """
+    try:
+        # Get bot_id from validated token
+        token_data = request.state.widget_token
+        bot_id = UUID(token_data["bot_id"])
+        
+        # Widget queries don't have a user_id (public access)
+        # Token validation already ensures this bot_id is valid
+        # Use service role for database access (bypasses RLS)
+        rag = RagService(access_token=None)  # No user token needed for widget queries
+        
+        # Widget queries should not include metadata (production mode)
+        # Override include_metadata to False for widgets (lighter responses)
+        result = await run_in_threadpool(
+            rag.answer,
+            bot_id,
+            None,  # No user_id for widget queries (token validates bot access)
+            body.query_text,
+            body.top_k or 5,
+            body.min_score or 0.25,
+            body.session_id,
+            body.page_url,
+            False,  # Widget queries: always exclude metadata for performance
+        )
+        
+        # Attach echo of session/page for clients
+        return {
+            "status": "success",
+            "data": {
+                **result,
+                "session_id": body.session_id,
+                "page_url": body.page_url,
+            }
+        }
+
+    except ValidationError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except DatabaseError as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    except Exception as e:
+        logger.error(f"Unexpected error in widget query: {str(e)}", exc_info=True)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unexpected error")
 
 

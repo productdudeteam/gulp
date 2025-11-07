@@ -2,7 +2,7 @@
     "info": {
         "_postman_id": "gulp-api-collection",
         "name": "Gulp API",
-        "description": "Complete API collection for Gulp chatbot platform with bot management, authentication, and RAG features.",
+        "description": "Complete API collection for Gulp chatbot platform with bot management, authentication, RAG features, and embeddable widget support.\n\n**Features:**\n- Bot management (CRUD)\n- Widget token management\n- Source management (files & URLs)\n- RAG query engine (authenticated & public widget endpoints)\n- Chat history support (last 5 messages)\n- CORS-enabled widget queries",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "_exporter_id": "gulp-api"
     },
@@ -538,19 +538,69 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"query_text\": \"What does this bot know about our docs?\",\n  \"top_k\": 5,\n  \"min_score\": 0.25,\n  \"session_id\": \"dev-session-123\",\n  \"page_url\": \"https://localhost/test\"\n}"
+                            "raw": "{\n  \"query_text\": \"What does this bot know about our docs?\",\n  \"top_k\": 5,\n  \"min_score\": 0.25,\n  \"session_id\": \"dev-session-123\",\n  \"page_url\": \"https://localhost/test\",\n  \"chat_history\": [\n    {\n      \"text\": \"What is the product?\",\n      \"isUser\": true,\n      \"timestamp\": \"2024-01-01T00:00:00Z\"\n    },\n    {\n      \"text\": \"Our product is an AI assistant.\",\n      \"isUser\": false,\n      \"timestamp\": \"2024-01-01T00:00:01Z\"\n    }\n  ],\n  \"include_metadata\": false\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/query",
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "bots", "{{bot_id}}", "query"]
                         },
-                        "description": "Run a RAG query against a bot. Returns retrieval-only answer with citations; generation comes next."
+                        "description": "Run a RAG query against a bot (authenticated endpoint).\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `query_text` (required): User's question\n- `top_k` (optional): Number of chunks to retrieve (1-20, default: 5)\n- `min_score` (optional): Minimum similarity score (0.0-1.0, default: 0.25)\n- `session_id` (optional): Session identifier for chat history\n- `page_url` (optional): Origin URL of the query\n- `chat_history` (optional): Previous chat messages from client (last 5 messages)\n  - Format: Array of `{text: string, isUser: boolean, timestamp?: string}`\n- `include_metadata` (optional): Include detailed source metadata (default: false)\n\n**Response:**\n- Returns answer with citations\n- Includes session_id and page_url in response\n- Chat history included in LLM context if provided"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Widget Query (Public)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.status === 'success' && jsonData.data) {",
+                                    "        console.log('Query successful!');",
+                                    "        console.log('Answer:', jsonData.data.answer);",
+                                    "        console.log('Session ID:', jsonData.data.session_id);",
+                                    "        console.log('Page URL:', jsonData.data.page_url);",
+                                    "        if (jsonData.data.citations) {",
+                                    "            console.log('Citations:', jsonData.data.citations.length);",
+                                    "        }",
+                                    "    }",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{widget_token}}",
+                                "description": "Widget token (required for public widget queries)"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"query_text\": \"What does this bot know about our docs?\",\n  \"top_k\": 5,\n  \"min_score\": 0.25,\n  \"session_id\": \"widget_session_123\",\n  \"page_url\": \"https://example.com/page\",\n  \"chat_history\": [\n    {\n      \"text\": \"What is the product?\",\n      \"isUser\": true,\n      \"timestamp\": \"2024-01-01T00:00:00Z\"\n    },\n    {\n      \"text\": \"Our product is an AI assistant.\",\n      \"isUser\": false,\n      \"timestamp\": \"2024-01-01T00:00:01Z\"\n    }\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/widget/query",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "widget", "query"]
+                        },
+                        "description": "Public widget query endpoint for embedded widgets.\n\n**Authentication:** Widget token (via Authorization header or query parameter)\n**Authorization:** Token validates bot access (no user authentication required)\n\n**Request Body:**\n- `query_text` (required): User's question\n- `top_k` (optional): Number of chunks to retrieve (1-20, default: 5)\n- `min_score` (optional): Minimum similarity score (0.0-1.0, default: 0.25)\n- `session_id` (optional): Session identifier for chat history\n- `page_url` (optional): Origin URL of the query\n- `chat_history` (optional): Previous chat messages from client (last 5 messages)\n  - Format: Array of `{text: string, isUser: boolean, timestamp?: string}`\n  - Messages are paired (user + assistant) and included in LLM context\n\n**Response:**\n- Returns answer with lightweight citations (chunk IDs only)\n- Includes session_id and page_url in response\n- Chat history from client included in LLM context\n- CORS headers allow all origins\n\n**Token Format:**\n- Authorization header: `Bearer <token>` or `Token <token>`\n- Query parameter: `?token=<token>`\n\n**Note:**\n- Widget queries always exclude metadata for performance\n- Token determines which bot to query (extracted from token validation)\n- Origin validation based on token's allowed_domains (bypassed in dev mode for localhost)"
                     },
                     "response": []
                 }
             ],
-            "description": "RAG query endpoint"
+            "description": "RAG query endpoints for authenticated users and public widgets"
         }
     ],
     "event": [
@@ -606,6 +656,12 @@
             "key": "base_url",
             "value": "http://localhost:8000",
             "type": "string"
+        },
+        {
+            "key": "widget_token",
+            "value": "",
+            "type": "string",
+            "description": "Widget token for public widget queries (get from Create Widget Token endpoint)"
         }
     ]
 }

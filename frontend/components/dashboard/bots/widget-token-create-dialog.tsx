@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, X, Copy, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, Copy, Plus, X } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,13 +16,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useCreateWidgetToken } from "@/lib/query/hooks/widget-tokens";
 import { useNotifications } from "@/lib/hooks/use-notifications";
+import { useCreateWidgetToken } from "@/lib/query/hooks/widget-tokens";
 import type { WidgetTokenCreateInput } from "@/lib/types/widget-token";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Info } from "lucide-react";
 
 interface WidgetTokenCreateDialogProps {
   open: boolean;
@@ -43,7 +42,16 @@ export default function WidgetTokenCreateDialog({
 
   const [domainInput, setDomainInput] = useState("");
   const [createdToken, setCreatedToken] = useState<string | null>(null);
+  const [scriptTagCopied, setScriptTagCopied] = useState(false);
   const [tokenCopied, setTokenCopied] = useState(false);
+
+  // Get API URL from environment or use default
+  const apiUrl =
+    process.env.NEXT_PUBLIC_GULP_API_URL || "http://localhost:8000";
+  // Get widget.js URL - can be from same origin or CDN
+  const widgetJsUrl =
+    process.env.NEXT_PUBLIC_GULP_WIDGET_URL ||
+    "http://localhost:3000/widget.js";
 
   // Reset form when dialog opens/closes
   useEffect(() => {
@@ -55,6 +63,7 @@ export default function WidgetTokenCreateDialog({
       });
       setDomainInput("");
       setCreatedToken(null);
+      setScriptTagCopied(false);
       setTokenCopied(false);
     }
   }, [open]);
@@ -86,6 +95,25 @@ export default function WidgetTokenCreateDialog({
     if (e.key === "Enter") {
       e.preventDefault();
       handleAddDomain();
+    }
+  };
+
+  // Generate script tag from token
+  const getScriptTag = (token: string): string => {
+    return `<script
+    src="${widgetJsUrl}"
+    data-token="${token}"
+    data-api-url="${apiUrl}"
+    async
+></script>`;
+  };
+
+  const handleCopyScriptTag = async () => {
+    if (createdToken) {
+      const scriptTag = getScriptTag(createdToken);
+      await navigator.clipboard.writeText(scriptTag);
+      setScriptTagCopied(true);
+      setTimeout(() => setScriptTagCopied(false), 2000);
     }
   };
 
@@ -126,61 +154,111 @@ export default function WidgetTokenCreateDialog({
         "Token Created",
         "Widget token created successfully! Save it now - it won't be shown again."
       );
-    } catch (err) {
+    } catch {
       // Error handled by mutation hook
     }
   };
 
-  // If token was created, show token display
+  // If token was created, show script tag display
   if (createdToken) {
+    const scriptTag = getScriptTag(createdToken);
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[700px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5 text-amber-500" />
-              Token Created Successfully
+            <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Info className="h-5 w-5 text-amber-500 flex-shrink-0" />
+              Widget Script Tag Ready
             </DialogTitle>
-            <DialogDescription>
-              Save this token immediately - it won't be shown again!
+            <DialogDescription className="text-sm">
+              Copy the script tag below and add it to your website. This is the
+              only time you&apos;ll see the token!
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <Alert>
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                This is the only time you'll see this token. Copy it now and store it securely.
+              <AlertDescription className="text-sm">
+                This script tag contains your token and is ready to use. Copy it
+                now - you won&apos;t see the full token again!
               </AlertDescription>
             </Alert>
             <div className="space-y-2">
-              <Label>Your Widget Token</Label>
-              <div className="flex items-center gap-2">
-                <code className="flex-1 bg-muted p-3 rounded-md font-mono text-sm break-all">
+              <Label className="text-sm font-medium">
+                Copy this script tag to your website
+              </Label>
+              <div className="relative">
+                <pre className="w-full bg-muted p-3 sm:p-4 rounded-md font-mono text-xs sm:text-sm overflow-x-auto border break-all whitespace-pre-wrap">
+                  <code className="break-all">{scriptTag}</code>
+                </pre>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopyScriptTag}
+                  className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 bg-background/80 backdrop-blur-sm hover:bg-background"
+                >
+                  {scriptTagCopied ? (
+                    <>
+                      <Check className="h-4 w-4 text-green-600 sm:mr-2" />
+                      <span className="hidden sm:inline">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Copy</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Or copy just the token
+              </Label>
+              <div className="relative">
+                <code className="w-full bg-muted p-3 sm:p-4 rounded-md font-mono text-xs sm:text-sm overflow-x-auto border break-all block">
                   {createdToken}
                 </code>
                 <Button
                   type="button"
                   variant="outline"
-                  size="icon"
+                  size="sm"
                   onClick={handleCopyToken}
-                  className="flex-shrink-0"
+                  className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 bg-background/80 backdrop-blur-sm hover:bg-background"
                 >
                   {tokenCopied ? (
-                    <Check className="h-4 w-4 text-green-600" />
+                    <>
+                      <Check className="h-4 w-4 text-green-600 sm:mr-2" />
+                      <span className="hidden sm:inline">Copied!</span>
+                    </>
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <>
+                      <Copy className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Copy</span>
+                    </>
                   )}
                 </Button>
               </div>
             </div>
-            <div className="text-sm text-muted-foreground space-y-1">
-              <p>
+            <div className="text-xs sm:text-sm text-muted-foreground space-y-2">
+              <p className="font-medium">
                 <strong>How to use:</strong>
               </p>
-              <ol className="list-decimal list-inside space-y-1 ml-2">
-                <li>Copy the token above</li>
-                <li>Add it to your widget script</li>
-                <li>Store it securely (password manager, environment variables)</li>
+              <ol className="list-decimal list-inside space-y-1.5 ml-2">
+                <li>Copy the script tag above</li>
+                <li>
+                  Paste it before the closing{" "}
+                  <code className="bg-muted px-1 py-0.5 rounded text-xs">
+                    &lt;/body&gt;
+                  </code>{" "}
+                  tag in your HTML
+                </li>
+                <li>The widget will automatically appear on your website</li>
+                <li>
+                  Make sure your widget.js file is accessible at the specified
+                  URL
+                </li>
               </ol>
             </div>
           </div>
@@ -194,16 +272,16 @@ export default function WidgetTokenCreateDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Plus className="h-5 w-5" /> Create Widget Token
+          <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Plus className="h-5 w-5 flex-shrink-0" /> Create Widget Token
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             Generate a token to embed your bot widget on websites.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleCreate} className="space-y-6 py-4">
+        <form onSubmit={handleCreate} className="space-y-4 sm:space-y-6 py-4">
           <div className="space-y-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Token Name (Optional)</Label>
@@ -241,12 +319,17 @@ export default function WidgetTokenCreateDialog({
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                Enter domains where this token can be used. Press Enter or click Add.
+                Enter domains where this token can be used. Press Enter or click
+                Add.
               </p>
               {formData.allowed_domains.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
                   {formData.allowed_domains.map((domain, idx) => (
-                    <Badge key={idx} variant="secondary" className="flex items-center gap-1">
+                    <Badge
+                      key={idx}
+                      variant="secondary"
+                      className="flex items-center gap-1"
+                    >
                       {domain}
                       <button
                         type="button"
@@ -280,7 +363,8 @@ export default function WidgetTokenCreateDialog({
                 min={new Date().toISOString().slice(0, 16)}
               />
               <p className="text-sm text-muted-foreground">
-                Leave empty for tokens that never expire. Expired tokens will be automatically rejected.
+                Leave empty for tokens that never expire. Expired tokens will be
+                automatically rejected.
               </p>
             </div>
           </div>
@@ -296,7 +380,10 @@ export default function WidgetTokenCreateDialog({
             <Button
               type="submit"
               className="gap-2"
-              disabled={createTokenMutation.isPending || formData.allowed_domains.length === 0}
+              disabled={
+                createTokenMutation.isPending ||
+                formData.allowed_domains.length === 0
+              }
             >
               {createTokenMutation.isPending ? (
                 <>
@@ -314,4 +401,3 @@ export default function WidgetTokenCreateDialog({
     </Dialog>
   );
 }
-

@@ -17,17 +17,19 @@ interface PageSEOProps {
 }
 
 export function PageSEO({
-  title = "Niya - Modern Next.js Template for Developers & AI Startups",
-  description = "Production-ready Next.js 15 template with Supabase, TypeScript, Tailwind CSS, and modern best practices. Perfect for developers and AI startups building scalable applications.",
+  title = "Gulp - Embed Intelligent Chatbots on Your Website",
+  description = "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. Train your bot with custom knowledge bases, choose OpenAI or Gemini, and embed with one line of code. No backend required.",
   keywords = [
-    "Next.js template",
-    "React template",
-    "TypeScript template",
-    "Supabase template",
-    "AI startup template",
-    "developer template",
+    "AI chatbot",
+    "chatbot builder",
+    "document chatbot",
+    "PDF chatbot",
+    "website chatbot",
+    "OpenAI chatbot",
+    "Gemini chatbot",
+    "knowledge base chatbot",
   ],
-  image = "/og-image.png",
+  image = "/logo/full-logo-text-white.png",
   url = "https://saas.nbarkiya.xyz",
   type = "website",
   author = "Naman Barkiya",
@@ -37,9 +39,9 @@ export function PageSEO({
   tags = [],
   structuredData,
 }: PageSEOProps) {
-  const fullTitle = title.includes("Niya")
+  const fullTitle = title.includes("Gulp")
     ? title
-    : `${title} | Niya - Next.js Template`;
+    : `${title} | Gulp - AI Assistant Platform`;
   const fullDescription =
     description.length > 160
       ? description.substring(0, 157) + "..."
@@ -59,7 +61,7 @@ export function PageSEO({
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="Niya Template" />
+      <meta property="og:site_name" content="Gulp" />
       <meta property="og:locale" content="en_US" />
 
       {/* Twitter Card */}
@@ -105,8 +107,8 @@ export function PageSEO({
       <meta name="robots" content="index, follow" />
       <meta name="googlebot" content="index, follow" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#000000" />
-      <meta name="msapplication-TileColor" content="#000000" />
+      <meta name="theme-color" content="#16171B" />
+      <meta name="msapplication-TileColor" content="#16171B" />
 
       {/* Preconnect to external domains for performance */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -125,16 +127,16 @@ export function PageSEO({
 export const TemplateStructuredData = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Niya",
+  name: "Gulp",
   description:
-    "Modern Next.js template for developers and AI startups with production-ready features",
+    "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. Train your bot with custom knowledge bases, choose OpenAI or Gemini, and embed with one line of code.",
   url: "https://saas.nbarkiya.xyz",
-  applicationCategory: "DeveloperApplication",
+  applicationCategory: "BusinessApplication",
   operatingSystem: "Web Browser",
   author: {
     "@type": "Person",
     name: "Naman Barkiya",
-    url: "https://github.com/namanbarkiya",
+    url: "https://github.com/namanbarkiya/gulp",
   },
   offers: {
     "@type": "Offer",
@@ -143,22 +145,21 @@ export const TemplateStructuredData = {
   },
   softwareVersion: "1.0.0",
   datePublished: "2025-01-01",
-  downloadUrl: "https://github.com/namanbarkiya/niya-saas-template",
+  image: "/logo/full-logo-text-white.png",
 };
 
 export const OrganizationStructuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Niya Template",
+  name: "Gulp",
   url: "https://saas.nbarkiya.xyz",
-  logo: "https://saas.nbarkiya.xyz/logo.png",
+  logo: "https://saas.nbarkiya.xyz/logo/full-logo-text-white.png",
   sameAs: [
-    "https://github.com/namanbarkiya/niya-saas-template",
-    "https://github.com/namanbarkiya",
+    "https://github.com/namanbarkiya/gulp",
   ],
   founder: {
     "@type": "Person",
     name: "Naman Barkiya",
-    url: "https://github.com/namanbarkiya",
+    url: "https://github.com/namanbarkiya/gulp",
   },
 };

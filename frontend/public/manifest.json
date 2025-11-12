@@ -1,21 +1,27 @@
 {
-  "name": "Niya - Modern Next.js Template",
-  "short_name": "Niya",
-  "description": "Production-ready Next.js 15 template for developers and AI startups with authentication, state management, and beautiful UI components.",
+  "name": "Gulp - AI Assistant Platform",
+  "short_name": "Gulp",
+  "description": "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. No backend code required.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#16171B",
+  "theme_color": "#16171B",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png",
+      "src": "/logo/logo-white.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/logo/logo-white.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
     }
   ],
-  "categories": ["developer", "productivity", "utilities"],
+  "categories": ["business", "productivity", "utilities"],
   "lang": "en",
   "dir": "ltr",
   "author": "Naman Barkiya",

@@ -16,29 +16,32 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Niya - Modern Next.js Template for Developers & AI Startups",
-    template: "%s | Niya - Next.js Template",
+    default: "Gulp - Embed Intelligent Chatbots on Your Website",
+    template: "%s | Gulp - AI Assistant Platform",
   },
   description:
-    "Niya is a production-ready Next.js 15 template with Supabase, TypeScript, Tailwind CSS, and modern best practices. Perfect for developers and AI startups building scalable applications with authentication, state management, and beautiful UI components.",
+    "Gulp lets you embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. Train your bot with custom knowledge bases, choose OpenAI or Gemini, get insights on user questions, and embed with one line of code. No backend required.",
   keywords: [
-    "Next.js template",
-    "React template",
-    "TypeScript template",
-    "Supabase template",
-    "AI startup template",
-    "developer template",
-    "modern web app",
-    "authentication template",
-    "state management",
-    "Tailwind CSS",
-    "Zustand",
-    "React Query",
-    "Zod validation",
-    "production ready",
-    "scalable template",
+    "AI chatbot",
+    "chatbot builder",
+    "document chatbot",
+    "PDF chatbot",
+    "website chatbot",
+    "OpenAI chatbot",
+    "Gemini chatbot",
+    "knowledge base chatbot",
+    "customer support chatbot",
+    "AI assistant",
+    "conversational AI",
+    "embed chatbot",
+    "no-code chatbot",
+    "document Q&A",
+    "intelligent chatbot",
+    "chatbot analytics",
+    "custom chatbot",
+    "AI assistant platform",
   ],
-  authors: [{ name: "Naman Barkiya", url: "https://github.com/namanbarkiya" }],
+  authors: [{ name: "Naman Barkiya", url: "https://github.com/namanbarkiya/gulp" }],
   creator: "Naman Barkiya",
   publisher: "Naman Barkiya",
   formatDetection: {
@@ -54,27 +57,27 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://saas.nbarkiya.xyz",
-    title: "Niya - Modern Next.js Template for Developers & AI Startups",
+    title: "Gulp - Embed Intelligent Chatbots on Your Website",
     description:
-      "Production-ready Next.js 15 template with Supabase, TypeScript, Tailwind CSS, and modern best practices. Perfect for developers and AI startups.",
-    siteName: "Niya Template",
+      "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. Train your bot with custom knowledge bases, choose OpenAI or Gemini, get insights on user questions, and embed with one line of code. No backend required.",
+    siteName: "Gulp",
     images: [
       {
-        url: "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png",
-        width: 512,
-        height: 512,
-        alt: "Niya Logo",
+        url: "https://saas.nbarkiya.xyz/logo/full-logo-text-white.png",
+        width: 1200,
+        height: 630,
+        alt: "Gulp - AI Assistant Platform",
       },
     ],
   },
   twitter: {
-    card: "summary",
-    title: "Niya - Modern Next.js Template for Developers & AI Startups",
+    card: "summary_large_image",
+    title: "Gulp - Embed Intelligent Chatbots on Your Website",
     description:
-      "Production-ready Next.js 15 template with Supabase, TypeScript, Tailwind CSS, and modern best practices.",
+      "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. Train your bot with custom knowledge bases, choose OpenAI or Gemini, and embed with one line of code.",
     creator: "@namanbarkiya",
     images: [
-      "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png",
+      "https://saas.nbarkiya.xyz/logo/full-logo-text-white.png",
     ],
   },
   robots: {
@@ -129,16 +132,16 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              name: "Niya",
+              name: "Gulp",
               description:
-                "Modern Next.js template for developers and AI startups with production-ready features including authentication, state management, and beautiful UI components.",
+                "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. Train your bot with custom knowledge bases, choose OpenAI or Gemini, get insights on user questions, and embed with one line of code.",
               url: "https://saas.nbarkiya.xyz",
-              applicationCategory: "DeveloperApplication",
+              applicationCategory: "BusinessApplication",
               operatingSystem: "Web Browser",
               author: {
                 "@type": "Person",
                 name: "Naman Barkiya",
-                url: "https://github.com/namanbarkiya",
+                url: "https://github.com/namanbarkiya/gulp",
               },
               offers: {
                 "@type": "Offer",
@@ -147,20 +150,16 @@ export default function RootLayout({
               },
               softwareVersion: "1.0.0",
               datePublished: "2025-01-01",
-              downloadUrl: "https://github.com/namanbarkiya/niya-saas-template",
-              image:
-                "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png",
+              image: "/logo/full-logo-text-white.png",
               featureList: [
-                "Next.js 15 with App Router",
-                "TypeScript support",
-                "Supabase integration",
-                "Authentication system",
-                "State management with Zustand",
-                "React Query for data fetching",
-                "Tailwind CSS styling",
-                "Zod validation",
-                "Modern UI components",
-                "Production ready",
+                "Upload PDFs, DOCX files, or website URLs",
+                "Train bots with custom knowledge bases",
+                "Choose between OpenAI or Gemini",
+                "One-line embed script",
+                "Analytics and insights on user questions",
+                "No backend code required",
+                "24/7 automated support",
+                "Secure and compliant",
               ],
             }),
           }}
@@ -172,30 +171,25 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Niya - Modern Next.js Template",
+              name: "Gulp - AI Assistant Platform",
               url: "https://saas.nbarkiya.xyz",
               description:
-                "Production-ready Next.js 15 template for developers and AI startups",
+                "Embed intelligent chatbots on your website powered by your own documents, PDFs, URLs, or custom text. No backend code required.",
               publisher: {
                 "@type": "Person",
                 name: "Naman Barkiya",
                 url: "https://github.com/namanbarkiya",
               },
-              potentialAction: {
-                "@type": "SearchAction",
-                target:
-                  "https://saas.nbarkiya.xyz/search?q={search_term_string}",
-                "query-input": "required name=search_term_string",
-              },
+              logo: "/logo/full-logo-text-white.png",
             }),
           }}
         />
         {/* Additional SEO Meta Tags */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="msapplication-TileColor" content="#000000" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="theme-color" content="#16171B" />
+        <meta name="msapplication-TileColor" content="#16171B" />
+        <link rel="icon" href="/logo/logo-white.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/logo/logo-white.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${dmSans.className} antialiased`}>

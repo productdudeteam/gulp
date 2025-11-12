@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,67 +13,78 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { InteractiveHoverButton } from "@/components/ui/magicui/interactive-hover-button";
+import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
 
 const plans = [
   {
-    name: "Free Template",
+    name: "Free",
     price: "$0",
-    description: "Perfect for personal projects and learning",
+    description: "Perfect for personal projects and testing",
     popular: false,
     features: [
-      "Complete Next.js 15 setup",
-      "TypeScript configuration",
-      "Tailwind CSS styling",
-      "Basic authentication",
-      "5+ UI components",
+      "1 chatbot",
+      "Up to 10 documents",
+      "Basic analytics",
+      "OpenAI or Gemini",
       "Community support",
+      "Standard response time",
     ],
   },
   {
-    name: "Pro License",
-    price: "$49",
-    description: "For professional projects and commercial use",
+    name: "Pro",
+    price: "$29",
+    description: "For growing businesses and teams",
     popular: true,
     features: [
-      "Everything in Free",
-      "Commercial license",
-      "Advanced components",
-      "Premium templates",
+      "Unlimited chatbots",
+      "Unlimited documents",
+      "Advanced analytics",
       "Priority support",
-      "Lifetime updates",
-      "Custom integrations",
-      "Team collaboration tools",
+      "Custom branding",
+      "API access",
+      "Export conversations",
+      "Team collaboration",
     ],
   },
   {
     name: "Enterprise",
     price: "Custom",
-    description: "For large teams and enterprise applications",
+    description: "For large organizations with custom needs",
     popular: false,
     features: [
       "Everything in Pro",
-      "Custom development",
       "Dedicated support",
-      "Training sessions",
-      "Code reviews",
-      "SLA guarantees",
-      "White-label options",
       "Custom integrations",
+      "SLA guarantees",
+      "On-premise deployment",
+      "Advanced security",
+      "Training sessions",
+      "Custom development",
     ],
   },
 ];
 
 export default function Pricing() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    } else {
+      router.push("/signup");
+    }
+  };
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16" id="pricing">
           <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">
-            Choose your plan
+            Simple, transparent pricing
           </h2>
           <p className="text-base text-foreground/80 max-w-2xl mx-auto">
-            Free to use and open source theme. This is a mock pricing section.
+            Start free and scale as you grow. No hidden fees, cancel anytime.
           </p>
         </div>
 
@@ -156,29 +168,12 @@ export default function Pricing() {
                     >
                       Contact Sales
                     </InteractiveHoverButton>
-                  ) : plan.popular ? (
-                    <InteractiveHoverButton
-                      onClick={() =>
-                        window.open(
-                          "https://github.com/namanbarkiya/niya-saas-template",
-                          "_blank"
-                        )
-                      }
-                      className="w-full"
-                    >
-                      Get Started
-                    </InteractiveHoverButton>
                   ) : (
                     <InteractiveHoverButton
-                      onClick={() =>
-                        window.open(
-                          "https://github.com/namanbarkiya/niya-saas-template",
-                          "_blank"
-                        )
-                      }
+                      onClick={handleGetStarted}
                       className="w-full"
                     >
-                      Download Free
+                      {plan.price === "$0" ? "Get Started Free" : "Start Free Trial"}
                     </InteractiveHoverButton>
                   )}
                 </div>
@@ -188,9 +183,9 @@ export default function Pricing() {
         </div>
 
         <div className="text-center mt-16">
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            All plans include access to the complete source code and
-            documentation.
+          <p className="text-sm text-foreground/60">
+            All plans include 24/7 support, secure hosting, and regular updates.
+            No credit card required to get started.
           </p>
         </div>
       </div>

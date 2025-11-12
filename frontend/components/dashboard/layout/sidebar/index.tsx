@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { TextLogo } from "@/components/ui/text-logo";
 import { useBots } from "@/lib/query/hooks/bots";
 
 // Navigation items
@@ -57,11 +58,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Bot className="size-4" />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <img
+                    src="/logo/logo-white.svg"
+                    alt="Gulp Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Gulp</span>
+                  <span className="truncate font-semibold">
+                    <TextLogo iconSize={16} />
+                  </span>
                   <span className="truncate text-xs text-muted-foreground">
                     AI Assistant Platform
                   </span>

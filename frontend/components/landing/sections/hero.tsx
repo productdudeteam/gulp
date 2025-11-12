@@ -41,7 +41,7 @@ export default function Hero() {
             <AnimatedShinyText
               className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-primary hover:duration-300"
               onClick={() =>
-                window.open("https://github.com/namanbarkiya", "_blank")
+                window.open("https://github.com/namanbarkiya/gulp", "_blank")
               }
             >
               {" "}
@@ -73,7 +73,7 @@ export default function Hero() {
           </InteractiveHoverButton>
           <InteractiveHoverButton
             onClick={() =>
-              window.open("https://github.com/namanbarkiya", "_blank")
+              window.open("https://github.com/namanbarkiya/gulp", "_blank")
             }
           >
             View Documentation

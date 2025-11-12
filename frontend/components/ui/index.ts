@@ -68,3 +68,4 @@ export { Marquee } from "./magicui/marquee";
 export { ScrollProgress } from "./magicui/scroll-progress";
 export { TweetCard } from "./magicui/tweet-card";
 export { WordRotate } from "./magicui/word-rotate";
+export { TextLogo } from "./text-logo";

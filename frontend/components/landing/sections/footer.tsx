@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowUpIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TextLogo } from "@/components/ui/text-logo";
 import { cn } from "@/lib/utils";
 
 export default function Footer({ className }: { className?: string }) {
@@ -24,22 +25,22 @@ export default function Footer({ className }: { className?: string }) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4 text-foreground">
-              Gulp
-            </h3>
+            <div className="flex items-center gap-3 mb-4">
+              <TextLogo showIcon iconSize={32} className="text-xl" />
+            </div>
             <p className="text-foreground/80 mb-4 max-w-md">
-              Embed intelligent chatbots on your website powered by your own documents, 
-              URLs, or custom text. No backend code required.
+              Embed intelligent chatbots on your website powered by your own
+              documents, URLs, or custom text. No backend code required.
             </p>
             <div className="flex gap-4">
               <a
-                href="https://github.com/namanbarkiya/niya-saas-template"
+                href="https://github.com/namanbarkiya/gulp"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-foreground/80 hover:text-primary transition-colors"
               >
                 <Github className="w-4 h-4" />
-                <span>View on GitHub</span>
+                <span>GitHub</span>
                 <ExternalLinkIcon className="w-3 h-3" />
               </a>
             </div>
@@ -48,38 +49,32 @@ export default function Footer({ className }: { className?: string }) {
           {/* Quick Links */}
           <div>
             <h4 className="text-sm font-semibold mb-4 text-foreground">
-              Template
+              Product
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="https://github.com/namanbarkiya/niya-saas-template"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/#features"
                   className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
                 >
-                  Download Template
-                </a>
+                  Features
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://saas.nbarkiya.xyz"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/#pricing"
                   className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
                 >
-                  Live Demo
-                </a>
+                  Pricing
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://github.com/namanbarkiya/niya-saas-template/blob/main/project-details/technical-description.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/signup"
                   className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
                 >
-                  Documentation
-                </a>
+                  Get Started
+                </Link>
               </li>
             </ul>
           </div>
@@ -92,32 +87,32 @@ export default function Footer({ className }: { className?: string }) {
             <ul className="space-y-2 text-sm">
               <li>
                 <a
-                  href="https://nextjs.org/docs"
+                  href="https://github.com/namanbarkiya/gulp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
                 >
-                  Next.js Docs
+                  Documentation
                 </a>
               </li>
               <li>
                 <a
-                  href="https://supabase.com/docs"
+                  href="https://github.com/namanbarkiya/gulp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
                 >
-                  Supabase Docs
+                  GitHub Repository
                 </a>
               </li>
               <li>
                 <a
-                  href="https://tailwindcss.com/docs"
+                  href="https://github.com/namanbarkiya/gulp/issues"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
                 >
-                  Tailwind CSS
+                  Support
                 </a>
               </li>
             </ul>
@@ -127,15 +122,16 @@ export default function Footer({ className }: { className?: string }) {
         {/* Bottom Section */}
         <div className="border-t border-primary/20 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="text-sm text-foreground/60">
-            &copy; {new Date().getFullYear()} Gulp. Built by{" "}
+            &copy; {new Date().getFullYear()} gulp.
+            {/* Built by{" "}
             <a
-              href="https://github.com/namanbarkiya"
+              href="https://github.com/namanbarkiya/gulp"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline hover:text-primary transition-colors"
             >
-              Naman Barkiya
-            </a>
+              SingleBit.
+            </a> */}
           </div>
 
           <div className="flex items-center gap-4">

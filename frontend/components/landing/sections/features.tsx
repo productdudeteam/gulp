@@ -10,7 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { BentoCard, BentoGrid } from "@/components/ui/magicui/bento-grid";
 import { Marquee } from "@/components/ui/magicui/marquee";
 import { cn } from "@/lib/utils";
-import AnimatedBeamMultipleOutputDemo from "./animated-beam-demo";
+import { AnimatedBeamDemo } from "./animated-beam-demo";
 import AnimatedListDemo from "./animated-list-demo";
 
 const supportedFormats = [
@@ -99,7 +99,7 @@ const features = [
     cta: "Learn more",
     className: "col-span-3 lg:col-span-2",
     background: (
-      <AnimatedBeamMultipleOutputDemo className="absolute right-2 top-4 h-[300px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
+      <AnimatedBeamDemo className="absolute inset-x-2 top-4 h-[300px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
     ),
   },
   {

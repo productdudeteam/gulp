@@ -2,17 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import {
-  BookOpen,
-  Code,
-  ExternalLink,
-  Github,
-  Home,
-  LogIn,
-  Moon,
-  Sparkles,
-  User,
-} from "lucide-react";
+import { Code, Home, LogIn, Moon, Sparkles, User } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Dock, DockIcon } from "@/components/ui/magicui/dock";
 import { useDarkMode } from "@/lib/hooks/use-dark-mode";
@@ -21,23 +11,16 @@ import { cn } from "@/lib/utils";
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
 export default function Navbar() {
-  const [isDark, toggleDark] = useDarkMode();
-  const { user, isAuthenticated } = useAuth();
+  const [, toggleDark] = useDarkMode();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
-  const handleGitHubClick = () => {
-    window.open("https://github.com/namanbarkiya/niya-saas-template", "_blank");
+  const handleFeaturesClick = () => {
+    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleDemoClick = () => {
-    window.open("https://saas.nbarkiya.xyz", "_blank");
-  };
-
-  const handleDocsClick = () => {
-    window.open(
-      "https://github.com/namanbarkiya/niya-saas-template/blob/main/project-details/technical-description.md",
-      "_blank"
-    );
+  const handlePricingClick = () => {
+    document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleProfileClick = () => {
@@ -63,24 +46,11 @@ export default function Navbar() {
           >
             <Home className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
-          <DockIcon
-            title="Features"
-            onClick={() =>
-              document
-                .getElementById("features")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-          >
+          <DockIcon title="Features" onClick={handleFeaturesClick}>
             <Sparkles className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
-          <DockIcon title="Documentation" onClick={handleDocsClick}>
-            <BookOpen className="size-full text-foreground/70 hover:text-primary" />
-          </DockIcon>
-          <DockIcon title="Live Demo" onClick={handleDemoClick}>
-            <ExternalLink className="size-full text-foreground/70 hover:text-primary" />
-          </DockIcon>
-          <DockIcon title="View on GitHub" onClick={handleGitHubClick}>
-            <Github className="size-full text-foreground/70 hover:text-primary" />
+          <DockIcon title="Pricing" onClick={handlePricingClick}>
+            <Code className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
           <DockIcon
             title={isAuthenticated ? "Dashboard" : "Login"}

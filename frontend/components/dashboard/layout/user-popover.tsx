@@ -7,7 +7,9 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Moon,
   Sparkles,
+  Sun,
   User,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -30,6 +32,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useLogout } from "@/lib/query/hooks/auth";
 import { useMyProfile } from "@/lib/query/hooks/profile";
+import { useDarkMode } from "@/lib/hooks/use-dark-mode";
 
 export function UserPopover() {
   const { user, isLoading } = useAuth();
@@ -37,6 +40,7 @@ export function UserPopover() {
   const logoutMutation = useLogout();
   const router = useRouter();
   const { isMobile } = useSidebar();
+  const [isDark, toggleDark] = useDarkMode();
 
   const handleLogout = async () => {
     try {
@@ -138,6 +142,13 @@ export function UserPopover() {
               >
                 <Bell />
                 Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={toggleDark}>
+                {isDark ? <Sun /> : <Moon />}
+                {isDark ? "Light Mode" : "Dark Mode"}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -13,33 +13,39 @@ interface Item {
 
 let notifications = [
   {
-    name: "Payment received",
-    description: "Magic UI",
+    name: "Bot created",
+    description: "Customer support bot trained on documentation",
     time: "15m ago",
-
-    icon: "💸",
+    icon: "🤖",
     color: "#00C9A7",
   },
   {
-    name: "User signed up",
-    description: "Magic UI",
+    name: "Document uploaded",
+    description: "PDF indexed and ready for queries",
     time: "10m ago",
-    icon: "👤",
+    icon: "📄",
     color: "#FFB800",
   },
   {
-    name: "New message",
-    description: "Magic UI",
+    name: "Query answered",
+    description: "User question answered via chatbot",
     time: "5m ago",
     icon: "💬",
     color: "#FF3D71",
   },
   {
-    name: "New event",
-    description: "Magic UI",
+    name: "Widget embedded",
+    description: "Chatbot widget added to website",
     time: "2m ago",
-    icon: "🗞️",
+    icon: "🔗",
     color: "#1E86FF",
+  },
+  {
+    name: "Website crawled",
+    description: "Knowledge base updated from URLs",
+    time: "1m ago",
+    icon: "🌐",
+    color: "#9B59B6",
   },
 ];
 
@@ -94,7 +100,7 @@ export default function AnimatedListDemo({
         className
       )}
     >
-      <AnimatedList>
+      <AnimatedList delay={2000}>
         {notifications.map((item, idx) => (
           <Notification {...item} key={idx} />
         ))}

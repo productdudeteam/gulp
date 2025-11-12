@@ -71,7 +71,7 @@ function TestimonialCard({
   return (
     <Card
       className={cn(
-        "w-80 h-48 p-6 mx-3",
+        "w-96 h-52 p-6 mx-3",
         "bg-card",
         "border border-primary/20",
         "shadow-lg",
@@ -112,11 +112,11 @@ export default function Testimonials() {
     <section className="overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-12">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">
-          Loved by developers worldwide
+          Trusted by organizations worldwide
         </h2>
         <p className="text-base text-foreground/80 max-w-2xl mx-auto">
-          Join thousands of developers who are building amazing applications
-          with our template.
+          See how universities, companies, and teams use Gulp to provide
+          intelligent assistance and reduce support workload.
         </p>
       </div>
 

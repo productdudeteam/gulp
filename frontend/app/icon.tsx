@@ -21,8 +21,8 @@ export default function Icon() {
         }}
       >
         <img
-          src="https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png"
-          alt="Niya Logo"
+          src="https://saas.nbarkiya.xyz/logo/logo-white.png"
+          alt="Gulp Logo"
           style={{
             width: "100%",
             height: "100%",

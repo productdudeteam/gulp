@@ -18,8 +18,8 @@ export default function CTA() {
     }
   };
 
-  const handleGitHub = () => {
-    window.open("https://github.com/namanbarkiya/niya-saas-template", "_blank");
+  const handleLearnMore = () => {
+    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -78,13 +78,13 @@ export default function CTA() {
                 Choose your preferred way to get started
               </p>
 
-              <div className="space-y-3">
+              <div className="space-y-3 space-x-2">
                 <InteractiveHoverButton onClick={handleGetStarted}>
                   {isAuthenticated ? "Go to Dashboard" : "Get Started Free"}
                 </InteractiveHoverButton>
 
-                <InteractiveHoverButton onClick={handleGitHub}>
-                  View Source Code
+                <InteractiveHoverButton onClick={handleLearnMore}>
+                  Learn More
                 </InteractiveHoverButton>
               </div>
 

@@ -6,7 +6,6 @@ import {
   Bot as BotIcon,
   Calendar,
   ChevronRight,
-  MessageSquare,
   Plus,
   Settings,
   Sparkles,
@@ -50,23 +49,18 @@ function BotCard({
   onEdit: () => void;
   onDelete: () => void;
 }) {
-  // Mock stats - will be replaced with real data
-  const mockStats = {
-    queries: 244,
-    sessions: 12,
-  };
-
   return (
     <Card
       className={cn(
         "group relative overflow-hidden transition-all duration-300 cursor-pointer",
         "border border-border hover:border-primary",
         "hover:shadow-lg hover:shadow-primary/10",
-        "hover:-translate-y-1 bg-card"
+        "hover:-translate-y-1 bg-card",
+        "flex flex-col h-full"
       )}
       onClick={onView}
     >
-      <CardHeader className="pb-4">
+      <CardHeader className="pb-4 flex-1">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div
@@ -116,24 +110,6 @@ function BotCard({
       </CardHeader>
 
       <CardContent className="pt-0">
-        {/* Stats Preview */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border">
-            <MessageSquare className="size-4 text-muted-foreground" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground">Queries</p>
-              <p className="text-sm font-semibold">{mockStats.queries}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border">
-            <Calendar className="size-4 text-muted-foreground" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground">Sessions</p>
-              <p className="text-sm font-semibold">{mockStats.sessions}</p>
-            </div>
-          </div>
-        </div>
-
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">

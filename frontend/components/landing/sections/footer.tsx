@@ -115,6 +115,14 @@ export default function Footer({ className }: { className?: string }) {
                   Support
                 </a>
               </li>
+              <li>
+                <Link
+                  href="/health"
+                  className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                >
+                  System Status
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

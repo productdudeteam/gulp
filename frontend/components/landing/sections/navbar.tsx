@@ -52,6 +52,14 @@ export default function Navbar() {
           <DockIcon title="Pricing" onClick={handlePricingClick}>
             <Code className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
+          <DockIcon title="Toggle Theme">
+            <Moon
+              className={cn(
+                "size-full text-foreground/70 hover:text-primary transition-colors"
+              )}
+              onClick={toggleDark}
+            />
+          </DockIcon>
           <DockIcon
             title={isAuthenticated ? "Dashboard" : "Login"}
             onClick={handleProfileClick}
@@ -61,14 +69,6 @@ export default function Navbar() {
             ) : (
               <LogIn className="size-full text-foreground/70 hover:text-primary" />
             )}
-          </DockIcon>
-          <DockIcon title="Toggle Theme">
-            <Moon
-              className={cn(
-                "size-full text-foreground/70 hover:text-primary transition-colors"
-              )}
-              onClick={toggleDark}
-            />
           </DockIcon>
         </Dock>
       </div>

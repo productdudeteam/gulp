@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { AlertCircle, CheckCircle2, FileText, Upload, X } from "lucide-react";
+import { AlertCircle, FileText, Upload, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useNotifications } from "@/lib/hooks/use-notifications";
 import { useUploadFileSource } from "@/lib/query/hooks/sources";
 
@@ -36,7 +35,6 @@ export default function SourceUpload({ botId }: SourceUploadProps) {
   const { error: showError } = useNotifications();
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const validateFile = (file: File): string | null => {
     // Check file size
@@ -66,14 +64,14 @@ export default function SourceUpload({ botId }: SourceUploadProps) {
     return null;
   };
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = useCallback((file: File) => {
     const error = validateFile(file);
     if (error) {
       showError("Invalid File", error);
       return;
     }
     setSelectedFile(file);
-  };
+  }, [showError]);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -93,7 +91,7 @@ export default function SourceUpload({ botId }: SourceUploadProps) {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelect(e.dataTransfer.files[0]);
     }
-  }, []);
+  }, [handleFileSelect]);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -107,13 +105,12 @@ export default function SourceUpload({ botId }: SourceUploadProps) {
     try {
       await uploadMutation.mutateAsync(selectedFile);
       setSelectedFile(null);
-      setUploadProgress(0);
       // Reset file input
       const fileInput = document.getElementById(
         "file-input"
       ) as HTMLInputElement;
       if (fileInput) fileInput.value = "";
-    } catch (err) {
+    } catch {
       // Error handled by mutation hook
     }
   };

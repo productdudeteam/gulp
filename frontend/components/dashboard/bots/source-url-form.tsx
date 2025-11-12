@@ -64,7 +64,7 @@ export default function SourceUrlForm({ botId }: SourceUrlFormProps) {
 
       await createUrlMutation.mutateAsync(sourceData);
       setUrl(""); // Clear form on success
-    } catch (err) {
+    } catch {
       // Error handled by mutation hook
     } finally {
       setIsSubmitting(false);

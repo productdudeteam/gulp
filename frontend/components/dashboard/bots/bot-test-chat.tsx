@@ -246,7 +246,7 @@ export default function BotTestChat({ bot }: BotTestChatProps) {
           confidence: res.confidence,
         };
         setMessages((prev) => [...prev, aiMessage]);
-      } catch (err) {
+      } catch {
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
@@ -258,7 +258,7 @@ export default function BotTestChat({ bot }: BotTestChatProps) {
         setIsLoading(false);
       }
     },
-    [input, isLoading, bot.id]
+    [input, isLoading, queryMutation]
   );
 
   const handleKeyDown = useCallback(
@@ -348,7 +348,7 @@ export default function BotTestChat({ bot }: BotTestChatProps) {
                               <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
-                                  a: ({ node, ...props }) => (
+                                  a: ({ ...props }) => (
                                     <a
                                       {...props}
                                       target="_blank"
@@ -357,7 +357,6 @@ export default function BotTestChat({ bot }: BotTestChatProps) {
                                     />
                                   ),
                                   code: ({
-                                    inline,
                                     className,
                                     children,
                                     ...props

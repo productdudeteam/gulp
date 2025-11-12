@@ -116,7 +116,7 @@ const dynamicRoutePatterns: Array<{
 
 export const useBreadcrumbStore = create<BreadcrumbStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // Initial state
       items: [],
       isLoading: false,

@@ -4,21 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Activity,
-  AlertTriangle,
-  ArrowLeft,
   Bell,
-  Calendar,
-  CheckCircle,
-  Mail,
   Settings,
   Shield,
-  Trash2,
-  User,
-  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
-  ProfileAccountStatus,
   ProfileDangerZone,
   ProfileTabs,
 } from "@/components/dashboard/profile";
@@ -26,20 +17,15 @@ import { ProfileOverview } from "@/components/dashboard/profile/profile-overview
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { useAuth } from "@/components/providers/auth-provider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { useLogout, useMyProfile, useUpdateMyProfile } from "@/lib/query/hooks";
-import type { UpdateUserProfileInput, UserProfile } from "@/lib/types/database";
+import type { UpdateUserProfileInput } from "@/lib/types/database";
 import { calculateProfileCompletion } from "@/lib/utils/profile-utils";
 import { validateProfileData } from "@/lib/utils/profile-utils";
 
@@ -140,9 +126,6 @@ export default function AccountPage() {
     );
   }
 
-  const displayName =
-    profile?.display_name || profile?.full_name || user?.name || "Anonymous";
-  const avatarUrl = profile?.avatar_url || user?.avatar_url;
   const profileCompletion = profile
     ? calculateProfileCompletion(profile)
     : null;

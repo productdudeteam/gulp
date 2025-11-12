@@ -61,7 +61,7 @@ export default function BotWidgetManagement({
               <strong>1. Create a Token</strong>
             </p>
             <p className="text-muted-foreground">
-              Click "Create Token" and specify the domains where your widget can be used. You can optionally set an expiration date.
+              Click &quot;Create Token&quot; and specify the domains where your widget can be used. You can optionally set an expiration date.
             </p>
           </div>
           <div className="space-y-2 text-sm">

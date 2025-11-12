@@ -1,6 +1,5 @@
 import { type Tweet, getTweet } from "react-tweet/api";
 import { Suspense } from "react";
-import Link from "next/link";
 import { type EnrichedTweet, type TweetProps, enrichTweet } from "react-tweet";
 import { cn } from "@/lib/utils";
 

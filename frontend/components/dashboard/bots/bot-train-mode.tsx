@@ -1,6 +1,8 @@
 "use client";
 
-import { Bot, GraduationCap, AlertCircle } from "lucide-react";
+import { AlertCircle, GraduationCap } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -8,8 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui";
 import type { Bot } from "@/lib/types/bot";
 
 interface BotTrainModeProps {
@@ -25,7 +25,7 @@ export default function BotTrainMode({ bot }: BotTrainModeProps) {
           <CardTitle>Train Mode</CardTitle>
         </div>
         <CardDescription>
-          Train and improve your bot's system prompt based on conversations
+          Train and improve your bot&apos;s system prompt based on conversations
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -33,9 +33,9 @@ export default function BotTrainMode({ bot }: BotTrainModeProps) {
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Coming Soon</AlertTitle>
           <AlertDescription>
-            Train mode will allow you to refine your bot's system prompt based on
-            actual conversations. This feature will be implemented in Phase 11
-            (System Prompt Training) of the implementation plan.
+            Train mode will allow you to refine your bot&apos;s system prompt
+            based on actual conversations. This feature will be implemented in
+            Phase 11 (System Prompt Training) of the implementation plan.
           </AlertDescription>
         </Alert>
 
@@ -67,4 +67,3 @@ export default function BotTrainMode({ bot }: BotTrainModeProps) {
     </Card>
   );
 }
-

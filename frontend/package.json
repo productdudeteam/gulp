@@ -36,6 +36,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "check:all": "npm run type-check && npm run lint && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "organize-imports": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",

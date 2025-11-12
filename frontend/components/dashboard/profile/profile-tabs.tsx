@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { UpdateUserProfileInput, UserProfile } from "@/lib/types/database";
 import { ProfileAvatar } from "./profile-avatar";
 import { ProfileBasicInfo } from "./profile-basic-info";

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Bot as BotIcon } from "lucide-react";
-import BotAnalytics from "@/components/dashboard/bots/bot-analytics";
 import BotSettingsForm from "@/components/dashboard/bots/bot-settings-form";
 import BotSourcesManagement from "@/components/dashboard/bots/bot-sources-management";
 import BotTestChat from "@/components/dashboard/bots/bot-test-chat";
@@ -13,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBot, useUpdateBot } from "@/lib/query/hooks/bots";
+import { useBot } from "@/lib/query/hooks/bots";
 
 export default function BotSettingsPage() {
   const params = useParams();

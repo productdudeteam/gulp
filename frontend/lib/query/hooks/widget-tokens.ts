@@ -12,7 +12,6 @@ import type {
   WidgetTokenListResponse,
 } from "@/lib/types/widget-token";
 import { apiDelete, apiGet, apiPost } from "@/lib/utils/api-client";
-import { queryKeys } from "../client";
 
 // =====================================================
 // QUERY FUNCTIONS
@@ -67,7 +66,7 @@ export function useCreateWidgetToken(botId: string) {
 
   return useMutation<WidgetTokenCreateResponse, Error, WidgetTokenCreateInput>({
     mutationFn: (tokenData) => createWidgetToken(botId, tokenData),
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["widget-tokens", botId] }); // Invalidate token list to refetch
       success(
         "Token Created",

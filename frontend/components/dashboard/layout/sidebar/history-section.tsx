@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import {
-  ArrowRight,
   BookOpenIcon,
-  Folder,
   Forward,
   History,
   MoreHorizontal,

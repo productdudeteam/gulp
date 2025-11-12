@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { BarChart3, TrendingUp, Users, MessageCircle, Clock, Target, Download, FileText } from "lucide-react";
+import { BarChart3, MessageCircle, Clock, Target, Download } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, type ChartConfig } from "@/components/ui/chart";
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useAnalyticsOverview } from "@/lib/query/hooks/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -17,7 +16,6 @@ interface BotAnalyticsProps {
   botId: string;
 }
 
-const COLORS = ['oklch(var(--chart-1))', 'oklch(var(--chart-2))', 'oklch(var(--chart-3))', 'oklch(var(--chart-4))', 'oklch(var(--chart-5))'];
 
 // CSV export utilities
 const convertToCSV = (data: any[], headers: string[]) => {
@@ -61,7 +59,7 @@ export default function BotAnalytics({ botId }: BotAnalyticsProps) {
   const [timeRange, setTimeRange] = useState("30");
 
   // Single analytics overview query
-  const { data: overview, isLoading, error } = useAnalyticsOverview(
+  const { data: overview, isLoading } = useAnalyticsOverview(
     botId,
     parseInt(timeRange),
     10, // top queries
@@ -171,7 +169,7 @@ export default function BotAnalytics({ botId }: BotAnalyticsProps) {
         <div>
           <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
           <p className="text-muted-foreground">
-            Track your bot's performance, usage patterns, and user interactions
+            Track your bot&apos;s performance, usage patterns, and user interactions
           </p>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>

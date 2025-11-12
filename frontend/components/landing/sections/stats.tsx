@@ -2,7 +2,6 @@
 
 import React from "react";
 import { AnimatedShinyText } from "@/components/ui/magicui/animated-shiny-text";
-import { cn } from "@/lib/utils";
 
 const stats = [
   {

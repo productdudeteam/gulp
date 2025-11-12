@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bot, Home, Settings } from "lucide-react";
+import { Bot, Settings } from "lucide-react";
 import { RecentBots } from "@/components/dashboard/layout/sidebar/recent-bots";
 import { UserPopover } from "@/components/dashboard/layout/user-popover";
 import {
@@ -59,9 +60,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <img
+                  <Image
                     src="/logo/logo-white.svg"
                     alt="Gulp Logo"
+                    width={32}
+                    height={32}
                     className="w-full h-full object-contain"
                   />
                 </div>

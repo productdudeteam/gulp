@@ -60,11 +60,13 @@ function StatusBadge({ status }: { status: Source["status"] }) {
       label: "Uploaded",
       variant: "default" as const,
       icon: FileText,
+      className: "",
     },
     parsing: {
       label: "Parsing",
       variant: "secondary" as const,
       icon: Loader2,
+      className: "",
     },
     indexed: {
       label: "Indexed",
@@ -76,6 +78,7 @@ function StatusBadge({ status }: { status: Source["status"] }) {
       label: "Failed",
       variant: "destructive" as const,
       icon: XCircle,
+      className: "",
     },
   };
 
@@ -85,7 +88,7 @@ function StatusBadge({ status }: { status: Source["status"] }) {
   return (
     <Badge
       variant={config.variant}
-      className={`flex items-center gap-1 ${config.className || ""} ${
+      className={`flex items-center gap-1 ${config.className} ${
         status === "parsing" ? "animate-pulse" : ""
       }`}
     >

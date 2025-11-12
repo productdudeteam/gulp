@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useMemo } from "react";
 import { createChatThreadStore } from "./store";
 import type {
   ChatAdapter,
@@ -44,7 +44,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
     return s;
   }, [threadId, initialMessages]);
 
-  const sendMessage = async (input: SendMessageInput) => {
+  const sendMessage = useCallback(async (input: SendMessageInput) => {
     const id =
       typeof crypto !== "undefined" && "randomUUID" in crypto
         ? crypto.randomUUID()
@@ -106,10 +106,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
     }
 
     // Demo fallback: echo response
-    const assistantId =
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : Math.random().toString(36).slice(2);
     const assistantMessageId = helpers.appendAssistant("", {
       isStreaming: true,
     });
@@ -119,9 +115,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
       helpers.streamAssistant(assistantMessageId, w + " ");
     }
     helpers.finishAssistant(assistantMessageId);
-  };
+  }, [useStore, adapter]);
 
-  const value = useMemo(() => ({ useStore, sendMessage }), [useStore]);
+  const value = useMemo(() => ({ useStore, sendMessage }), [useStore, sendMessage]);
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };

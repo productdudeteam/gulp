@@ -9,7 +9,6 @@ import Navbar from "@/components/landing/sections/navbar";
 import Pricing from "@/components/landing/sections/pricing";
 import Stats from "@/components/landing/sections/stats";
 import Testimonials from "@/components/landing/sections/testimonials";
-import TweetGallery from "@/components/landing/sections/tweet-gallery";
 import { ScrollProgress } from "@/components/ui/magicui/scroll-progress";
 import { RevealOnScroll } from "@/components/ui/reveal-on-scroll";
 

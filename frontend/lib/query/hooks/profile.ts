@@ -5,17 +5,13 @@
 // =====================================================
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
-  PublicProfile,
   UpdateUserProfileInput,
   UserProfile,
 } from "@/lib/types/database";
 import {
   getMyProfile,
-  getProfileCacheKey,
   getPublicProfile,
   getPublicProfiles,
-  getPublicProfilesCacheKey,
-  invalidateProfileCache,
   markProfileCompleted,
   updateLastSeen,
   updateMyProfile,
@@ -146,9 +142,6 @@ export function useProfileWithOptimisticUpdate() {
 
   const updateProfileOptimistically = (updates: UpdateUserProfileInput) => {
     if (!profile) return;
-
-    // Optimistically update the cache
-    const optimisticProfile = { ...profile, ...updates };
 
     updateProfileMutation.mutate(updates, {
       onError: () => {
@@ -325,7 +318,7 @@ function getMissingFields(profile: UserProfile): string[] {
 /**
  * Hook to subscribe to profile changes (if using Supabase real-time)
  */
-export function useProfileSubscription(userId?: string) {
+export function useProfileSubscription() {
   // This would integrate with Supabase real-time subscriptions
   // For now, we'll return a placeholder
   return {

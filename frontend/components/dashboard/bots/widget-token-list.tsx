@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Key, Copy, Trash2, ExternalLink, AlertCircle } from "lucide-react";
+import { Key, Copy, Trash2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,

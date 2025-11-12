@@ -1,9 +1,7 @@
 import {
   BarChart3,
   Bot,
-  FileText,
   Globe,
-  Settings,
   Upload,
 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";

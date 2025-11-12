@@ -6,41 +6,42 @@ import { cn } from "@/lib/utils";
 
 const stats = [
   {
-    value: "15+",
-    label: "Components",
-    description: "Pre-built UI components",
+    value: "5min",
+    label: "Setup Time",
+    description: "From signup to live chatbot",
   },
   {
-    value: "5+",
-    label: "Pages",
-    description: "Complete page templates",
+    value: "2",
+    label: "LLM Providers",
+    description: "OpenAI & Gemini support",
   },
   {
     value: "100%",
-    label: "TypeScript",
-    description: "Fully type-safe codebase",
+    label: "No Code",
+    description: "Zero backend development",
   },
   {
-    value: "99%",
-    label: "Lighthouse",
-    description: "Performance score",
+    value: "24/7",
+    label: "Available",
+    description: "Always-on intelligent assistant",
   },
 ];
 
 export default function Stats() {
   return (
-    <section className="px-4 py-16">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="text-center mb-16">
-          <AnimatedShinyText className="text-sm font-normal text-neutral-600 dark:text-neutral-400 mb-4">
-            ✨ Built for developers, by developers
+          <AnimatedShinyText className="text-sm font-normal text-foreground/60 mb-4">
+            ✨ Powered by your own knowledge
           </AnimatedShinyText>
-          <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-            Why developers choose our template
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
+            Why organizations choose Gulp
           </h2>
-          <p className="text-base text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-            A comprehensive Next.js template with all the tools and components
-            you need to build modern web applications.
+          <p className="text-base text-foreground/80 max-w-2xl mx-auto">
+            Embed intelligent chatbots on your website in minutes. Train them on
+            your documents, get insights on user questions, and provide 24/7
+            automated support.
           </p>
         </div>
 
@@ -48,31 +49,28 @@ export default function Stats() {
           {stats.map((stat, index) => (
             <div key={index} className="text-center relative group">
               {/* Background card effect */}
-              <div className="absolute inset-0 bg-white/30 dark:bg-white/5 rounded-xl border border-white/20 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-card rounded-xl border border-primary/20 opacity-0 group-hover:opacity-100 group-hover:border-primary/40 transition-all duration-300" />
 
               <div className="relative z-10 p-6">
                 {/* Number as header */}
-                <div className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 mb-4 tracking-tight">
+                <div className="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">
                   {stat.value}
                 </div>
 
-                {/* Divider */}
-                {/* <div className="w-16 h-0.5 bg-neutral-300 dark:bg-neutral-600 mx-auto mb-6" /> */}
-
                 {/* Label */}
-                <div className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-3 uppercase tracking-wide">
+                <div className="text-lg font-semibold text-foreground mb-3 uppercase tracking-wide">
                   {stat.label}
                 </div>
 
                 {/* Description */}
-                <div className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <div className="text-sm text-foreground/60 leading-relaxed">
                   {stat.description}
                 </div>
               </div>
 
               {/* Vertical divider between stats (except last item) */}
               {index < stats.length - 1 && (
-                <div className="hidden md:block absolute top-1/2 -right-6 w-px h-20 bg-neutral-300 dark:bg-neutral-600 transform -translate-y-1/2" />
+                <div className="hidden md:block absolute top-1/2 -right-6 w-px h-20 bg-primary/20 transform -translate-y-1/2" />
               )}
             </div>
           ))}

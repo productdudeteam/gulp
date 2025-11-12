@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ChevronDown } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { AnimatedShinyText } from "@/components/ui/magicui/animated-shiny-text";
 import { AuroraText } from "@/components/ui/magicui/aurora-text";
@@ -24,16 +25,16 @@ export default function Hero() {
 
   return (
     <section className="relative flex min-h-screen md:min-h-[90vh] flex-col items-center justify-center px-2 py-8 md:px-4 md:py-24 overflow-hidden">
-      {/* Animated background orbs */}
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-blue-400/15 to-purple-400/15 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-400/15 to-pink-400/15 rounded-full blur-3xl animate-pulse delay-1000" />
-      <div className="relative z-10 flex flex-col items-center gap-8 w-full max-w-4xl mx-auto">
+      {/* Subtle yellow accent orbs */}
+      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse delay-1000" />
+      <div className="relative z-10 flex flex-col items-center gap-8 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         {" "}
         <div className="z-10 flex items-center justify-center">
           {" "}
           <div
             className={cn(
-              "group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+              "group rounded-full border border-primary/20 bg-primary/10 text-base text-primary-foreground transition-all ease-in hover:cursor-pointer hover:bg-primary/20"
             )}
           >
             {" "}
@@ -44,46 +45,60 @@ export default function Hero() {
               }
             >
               {" "}
-              <span>🚀 Built by Naman Barkiya</span>{" "}
+              <span>✨ Intelligent AI Assistant Platform</span>{" "}
               <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />{" "}
             </AnimatedShinyText>{" "}
           </div>{" "}
         </div>{" "}
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-center tracking-tight leading-tight">
-          The Ultimate <AuroraText>Next.js</AuroraText> Template for Developers
+          Embed Intelligent <AuroraText>Chatbots</AuroraText> on Your Website
         </h1>
         <div className="mt-2">
           {" "}
           <WordRotate
             words={[
-              "Production-ready with Supabase & TypeScript.",
-              "Modern authentication & state management.",
-              "Beautiful UI with Tailwind CSS & Magic UI.",
-              "Scalable architecture for AI startups.",
-              "Zero-config setup for rapid development.",
+              "Powered by your own documents, PDFs, and URLs.",
+              "Train your bot with custom knowledge bases.",
+              "Choose OpenAI or Gemini for intelligent responses.",
+              "Get insights on what users are asking.",
+              "One-line embed script. No backend code needed.",
             ]}
-            className="text-lg text-center md:text-xl text-neutral-600 dark:text-neutral-300 font-normal min-h-[2rem]"
+            className="text-lg text-center md:text-xl text-foreground/80 font-normal min-h-[2rem]"
             duration={2200}
           />{" "}
         </div>{" "}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 w-fit max-w-md mx-auto">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 w-fit max-w-lg mx-auto">
           <InteractiveHoverButton onClick={handleAuthButtonClick}>
-            {isAuthenticated ? "Go to Dashboard" : "Get Started"}
+            {isAuthenticated ? "Go to Dashboard" : "Get Started Free"}
           </InteractiveHoverButton>
           <InteractiveHoverButton
             onClick={() =>
-              window.open(
-                "https://github.com/namanbarkiya/niya-saas-template",
-                "_blank"
-              )
+              window.open("https://github.com/namanbarkiya", "_blank")
             }
           >
-            View on GitHub
+            View Documentation
           </InteractiveHoverButton>
         </div>
-        <div className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          <p>Trusted by developers worldwide • Free & Open Source</p>
+        <div className="mt-6 text-center text-sm text-foreground/60">
+          <p>
+            Trusted by universities, companies, and knowledge-base sites
+            worldwide
+          </p>
         </div>
+      </div>
+
+      {/* Animated Scroll Down Arrow */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+        <a
+          href="#features"
+          className="flex flex-col items-center gap-2 text-foreground/60 hover:text-primary transition-colors duration-300 group"
+          aria-label="Scroll to features"
+        >
+          <span className="text-xs font-medium tracking-wider uppercase animate-pulse">
+            ...
+          </span>
+          <ChevronDown className="w-6 h-6 animate-bounce group-hover:translate-y-1 transition-transform duration-300" />
+        </a>
       </div>
     </section>
   );

@@ -55,13 +55,13 @@ export default function Navbar() {
         <Dock
           iconMagnification={60}
           iconDistance={100}
-          className="backdrop-blur-md backdrop-saturate-150 bg-white/40 dark:bg-neutral-900/40 border border-white/20 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-black/20"
+          className="bg-card border border-primary/20 shadow-xl"
         >
           <DockIcon
             title="Back to Top"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <Home className="size-full text-neutral-600 dark:text-neutral-300/70" />
+            <Home className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
           <DockIcon
             title="Features"
@@ -71,32 +71,31 @@ export default function Navbar() {
                 ?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            <Sparkles className="size-full text-neutral-600 dark:text-neutral-300/70" />
+            <Sparkles className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
           <DockIcon title="Documentation" onClick={handleDocsClick}>
-            <BookOpen className="size-full text-neutral-600 dark:text-neutral-300/70" />
+            <BookOpen className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
           <DockIcon title="Live Demo" onClick={handleDemoClick}>
-            <ExternalLink className="size-full text-neutral-600 dark:text-neutral-300/70" />
+            <ExternalLink className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
           <DockIcon title="View on GitHub" onClick={handleGitHubClick}>
-            <Github className="size-full text-neutral-600 dark:text-neutral-300/70" />
+            <Github className="size-full text-foreground/70 hover:text-primary" />
           </DockIcon>
           <DockIcon
             title={isAuthenticated ? "Dashboard" : "Login"}
             onClick={handleProfileClick}
           >
             {isAuthenticated ? (
-              <User className="size-full text-neutral-600 dark:text-neutral-300/70" />
+              <User className="size-full text-foreground/70 hover:text-primary" />
             ) : (
-              <LogIn className="size-full text-neutral-600 dark:text-neutral-300/70" />
+              <LogIn className="size-full text-foreground/70 hover:text-primary" />
             )}
           </DockIcon>
           <DockIcon title="Toggle Theme">
             <Moon
               className={cn(
-                "size-full text-gray-600",
-                isDark && "dark:text-yellow-400"
+                "size-full text-foreground/70 hover:text-primary transition-colors"
               )}
               onClick={toggleDark}
             />

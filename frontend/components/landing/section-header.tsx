@@ -20,7 +20,7 @@ export function SectionHeader({
     <div className={cn("text-center mb-12", className)}>
       <h2
         className={cn(
-          "text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 mb-3",
+          "text-2xl md:text-3xl font-semibold tracking-tight text-foreground mb-3",
           titleClassName
         )}
       >
@@ -29,7 +29,7 @@ export function SectionHeader({
       {subtitle && (
         <p
           className={cn(
-            "text-base text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto",
+            "text-base text-foreground/80 max-w-2xl mx-auto",
             subtitleClassName
           )}
         >

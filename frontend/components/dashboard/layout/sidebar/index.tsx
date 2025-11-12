@@ -78,9 +78,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarMenu>
             {mainNavItems.map((item) => {
-              const isActive =
-                pathname === item.url ||
-                (item.url !== "/dashboard" && pathname.startsWith(item.url));
+              // Only active if exactly on the base URL, not on a sub-route
+              // This prevents "Bots" from being active when viewing a specific bot
+              const isActive = pathname === item.url;
               return (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive}>

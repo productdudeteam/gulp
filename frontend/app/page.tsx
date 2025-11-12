@@ -1,4 +1,5 @@
 import React from "react";
+import { ForceDarkMode } from "@/components/landing/force-dark-mode";
 import { SectionHeader } from "@/components/landing/section-header";
 import CTA from "@/components/landing/sections/cta";
 import Features from "@/components/landing/sections/features";
@@ -14,78 +15,77 @@ import { RevealOnScroll } from "@/components/ui/reveal-on-scroll";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen relative">
-      {/* Global gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-50/60 via-indigo-50/40 to-purple-50/30 dark:from-blue-950/25 dark:via-indigo-950/15 dark:to-purple-950/10" />
+    <>
+      <ForceDarkMode />
+      <div className="min-h-screen relative">
+        {/* Solid black background - always dark for branding */}
+        <div className="fixed inset-0 bg-background" />
 
-      {/* Content wrapper */}
-      <div className="relative z-10">
-        <Navbar />
-        <ScrollProgress />
+        {/* Content wrapper */}
+        <div className="relative z-10">
+          <Navbar />
+          <ScrollProgress />
 
-        {/* Hero Section */}
-        <RevealOnScroll direction="up" delay={200}>
-          <Hero />
-        </RevealOnScroll>
-
-        {/* Stats Section */}
-        <div className="py-20">
+          {/* Hero Section */}
           <RevealOnScroll direction="up" delay={200}>
-            <Stats />
+            <Hero />
           </RevealOnScroll>
-        </div>
 
-        {/* Features Section */}
-        <div className="py-20">
-          <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
-            <RevealOnScroll direction="up" delay={100}>
-              <SectionHeader
-                title="Powerful features for modern development"
-                subtitle="Built with modern technologies and best practices to help you ship faster and scale effortlessly."
-              />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={300}>
-              <Features />
+          {/* Stats Section */}
+          <div className="py-20">
+            <RevealOnScroll direction="up" delay={200}>
+              <Stats />
             </RevealOnScroll>
           </div>
-        </div>
 
-        {/* Testimonials Section */}
-        <div className="py-20">
-          <RevealOnScroll direction="up" delay={200}>
-            <Testimonials />
-          </RevealOnScroll>
-        </div>
+          {/* Features Section */}
+          <div id="features" className="py-20 scroll-mt-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <RevealOnScroll direction="up" delay={100}>
+                <SectionHeader
+                  title="Everything you need to build intelligent chatbots"
+                  subtitle="Upload content, configure your bot, and embed it on your website. Get insights on user questions and improve your knowledge base."
+                />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={300}>
+                <Features />
+              </RevealOnScroll>
+            </div>
+          </div>
 
-        {/* Pricing Section */}
-        <div className="py-20">
-          <RevealOnScroll direction="up" delay={200}>
-            <Pricing />
-          </RevealOnScroll>
-        </div>
-
-        {/* Social Proof Section */}
-        <div className="py-20">
-          <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
-            <RevealOnScroll direction="up" delay={100}>
-              <SectionHeader
-                title="Join the community"
-                subtitle="See what developers are saying about our template on social media."
-              />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={300}>
-              <TweetGallery />
+          {/* Testimonials Section */}
+          <div className="py-20">
+            <RevealOnScroll direction="up" delay={200}>
+              <Testimonials />
             </RevealOnScroll>
           </div>
+
+          {/* Pricing Section */}
+          <div className="py-20">
+            <RevealOnScroll direction="up" delay={200}>
+              <Pricing />
+            </RevealOnScroll>
+          </div>
+
+          {/* Use Cases Section */}
+          <div className="py-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <RevealOnScroll direction="up" delay={100}>
+                <SectionHeader
+                  title="Perfect for every organization"
+                  subtitle="Universities, companies, knowledge bases, and internal teams use Gulp to provide intelligent assistance."
+                />
+              </RevealOnScroll>
+              {/* Final CTA */}
+              <RevealOnScroll direction="up" delay={200}>
+                <CTA />
+              </RevealOnScroll>
+            </div>
+          </div>
+
+          <Footer />
         </div>
-
-        {/* Final CTA */}
-        <RevealOnScroll direction="up" delay={200}>
-          <CTA />
-        </RevealOnScroll>
-
-        <Footer />
       </div>
-    </div>
+    </>
   );
 }

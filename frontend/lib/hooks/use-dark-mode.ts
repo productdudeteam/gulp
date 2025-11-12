@@ -13,18 +13,21 @@ export function useDarkMode() {
     if (userPref === "dark") dark = true;
     else if (userPref === "light") dark = false;
     else dark = true; // Default to dark if no user preference
+
     // Apply class if needed
     if (dark && !root.classList.contains("dark")) {
       root.classList.add("dark");
     } else if (!dark && root.classList.contains("dark")) {
       root.classList.remove("dark");
     }
+
     setIsDark(root.classList.contains("dark"));
 
     // Listen for class changes
     const observer = new MutationObserver(() => {
       setIsDark(root.classList.contains("dark"));
     });
+
     observer.observe(root, {
       attributes: true,
       attributeFilter: ["class"],
@@ -37,6 +40,7 @@ export function useDarkMode() {
     if (typeof window === "undefined") return;
     const root = document.documentElement;
     const isCurrentlyDark = root.classList.contains("dark");
+
     if (isCurrentlyDark) {
       root.classList.remove("dark");
       localStorage.setItem("theme", "light");

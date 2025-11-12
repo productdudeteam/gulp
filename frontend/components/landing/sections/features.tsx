@@ -1,4 +1,11 @@
-import { CodeIcon, PaletteIcon, ShieldIcon, ZapIcon } from "lucide-react";
+import {
+  BarChart3,
+  Bot,
+  FileText,
+  Globe,
+  Settings,
+  Upload,
+} from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { BentoCard, BentoGrid } from "@/components/ui/magicui/bento-grid";
 import { Marquee } from "@/components/ui/magicui/marquee";
@@ -6,75 +13,76 @@ import { cn } from "@/lib/utils";
 import AnimatedBeamMultipleOutputDemo from "./animated-beam-demo";
 import AnimatedListDemo from "./animated-list-demo";
 
-const techStack = [
+const supportedFormats = [
   {
-    name: "Next.js 15",
-    body: "Latest App Router with TypeScript support and optimized performance.",
+    name: "PDF Documents",
+    body: "Upload PDF files and extract text for training your bot.",
   },
   {
-    name: "Supabase",
-    body: "Real-time database with authentication, storage, and edge functions.",
+    name: "DOCX Files",
+    body: "Support for Microsoft Word documents and rich text.",
   },
   {
-    name: "Tailwind CSS",
-    body: "Utility-first CSS framework for rapid UI development and customization.",
+    name: "Website URLs",
+    body: "Crawl and index entire websites or specific pages.",
   },
   {
-    name: "Zustand",
-    body: "Lightweight state management with TypeScript support and minimal boilerplate.",
+    name: "Plain Text",
+    body: "Direct text input for custom knowledge bases.",
   },
   {
-    name: "React Query",
-    body: "Powerful data fetching and caching library for server state management.",
+    name: "HTML Pages",
+    body: "Parse and extract content from web pages automatically.",
   },
   {
-    name: "Zod",
-    body: "TypeScript-first schema validation for runtime type safety and error handling.",
+    name: "Multiple Sources",
+    body: "Combine documents, URLs, and text in one knowledge base.",
   },
 ];
 
 const features = [
   {
-    Icon: CodeIcon,
-    name: "Modern Tech Stack",
+    Icon: Upload,
+    name: "Upload & Index Content",
     description:
-      "Built with Next.js 15, TypeScript, and cutting-edge tools for production-ready applications.",
+      "Upload PDFs, DOCX files, or add website URLs. Gulp automatically extracts, chunks, and indexes your content for intelligent retrieval.",
     href: "#",
-    cta: "View Tech Stack",
+    cta: "Learn more",
     className: "col-span-3 lg:col-span-1",
     background: (
       <Marquee
         pauseOnHover
         className="absolute top-10 [--duration:20s] [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] "
       >
-        {techStack.map((tech, idx) => (
+        {supportedFormats.map((format, idx) => (
           <figure
             key={idx}
             className={cn(
               "relative w-32 cursor-pointer overflow-hidden rounded-xl border p-4",
-              "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-              "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+              "border-primary/20 bg-card hover:bg-primary/10 hover:border-primary/40",
               "transform-gpu blur-[1px] transition-all duration-300 ease-out hover:blur-none"
             )}
           >
             <div className="flex flex-row items-center gap-2">
               <div className="flex flex-col">
-                <figcaption className="text-sm font-medium dark:text-white ">
-                  {tech.name}
+                <figcaption className="text-sm font-medium text-foreground">
+                  {format.name}
                 </figcaption>
               </div>
             </div>
-            <blockquote className="mt-2 text-xs">{tech.body}</blockquote>
+            <blockquote className="mt-2 text-xs text-foreground/60">
+              {format.body}
+            </blockquote>
           </figure>
         ))}
       </Marquee>
     ),
   },
   {
-    Icon: ShieldIcon,
-    name: "Authentication & Security",
+    Icon: Bot,
+    name: "Configure Your Bot",
     description:
-      "Complete auth system with Supabase, protected routes, and role-based access control.",
+      "Create and customize your AI assistant. Set system prompts, choose between OpenAI or Gemini, and configure temperature and token limits.",
     href: "#",
     cta: "Learn more",
     className: "col-span-3 lg:col-span-2",
@@ -83,10 +91,10 @@ const features = [
     ),
   },
   {
-    Icon: ZapIcon,
-    name: "State Management",
+    Icon: Globe,
+    name: "One-Line Embed",
     description:
-      "Optimized state management with Zustand and React Query for scalable applications.",
+      "Copy a simple embed script and add it to your website. The chat widget automatically initializes and connects to your trained bot.",
     href: "#",
     cta: "Learn more",
     className: "col-span-3 lg:col-span-2",
@@ -95,13 +103,13 @@ const features = [
     ),
   },
   {
-    Icon: PaletteIcon,
-    name: "Beautiful UI Components",
+    Icon: BarChart3,
+    name: "Analytics & Insights",
     description:
-      "Modern UI components with Magic UI, Radix primitives, and Tailwind CSS styling.",
+      "Track query volume, popular questions, unanswered queries, and get insights on what users are asking. Export data as CSV for analysis.",
     className: "col-span-3 lg:col-span-1",
     href: "#",
-    cta: "View Components",
+    cta: "View Analytics",
     background: (
       <Calendar
         mode="single"

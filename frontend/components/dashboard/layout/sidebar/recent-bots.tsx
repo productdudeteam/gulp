@@ -24,11 +24,14 @@ export function RecentBots({ bots }: RecentBotsProps) {
   return (
     <SidebarMenu>
       {bots.map((bot) => {
-        const isActive = pathname.includes(`/dashboard/bots/${bot.id}`);
+        // Only active if pathname exactly matches or starts with the bot's URL
+        // This ensures only one item is selected at a time
+        const botUrl = `/dashboard/bots/${bot.id}`;
+        const isActive = pathname === botUrl || pathname.startsWith(`${botUrl}/`);
         return (
           <SidebarMenuItem key={bot.id}>
             <SidebarMenuButton asChild isActive={isActive}>
-              <Link href={`/dashboard/bots/${bot.id}`}>
+              <Link href={botUrl}>
                 <Bot className="size-4" />
                 <span className="truncate">{bot.name}</span>
               </Link>

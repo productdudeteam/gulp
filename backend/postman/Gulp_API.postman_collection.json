@@ -601,6 +601,401 @@
                 }
             ],
             "description": "RAG query endpoints for authenticated users and public widgets"
+        },
+        {
+            "name": "Analytics",
+            "item": [
+                {
+                    "name": "Get Analytics Summary",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/analytics/summary?days=30",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "analytics",
+                                "summary"
+                            ],
+                            "query": [
+                                {
+                                    "key": "days",
+                                    "value": "30",
+                                    "description": "Number of days to look back (1-365)"
+                                }
+                            ]
+                        },
+                        "description": "Get summary analytics for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns summary statistics (total queries, average confidence, average latency, total tokens)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Top Queries",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/analytics/queries?limit=10&days=30",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "analytics",
+                                "queries"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of top queries to return (1-50)"
+                                },
+                                {
+                                    "key": "days",
+                                    "value": "30",
+                                    "description": "Number of days to look back (1-365)"
+                                }
+                            ]
+                        },
+                        "description": "Get top queries by frequency.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Number of top queries to return (1-50, default: 10)\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns list of top queries with frequency and average confidence"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Unanswered Queries",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/analytics/unanswered?limit=20&days=30",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "analytics",
+                                "unanswered"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "20",
+                                    "description": "Number of queries to return (1-100)"
+                                },
+                                {
+                                    "key": "days",
+                                    "value": "30",
+                                    "description": "Number of days to look back (1-365)"
+                                }
+                            ]
+                        },
+                        "description": "Get queries that may not have been answered well.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Number of queries to return (1-100, default: 20)\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns list of queries with low confidence or empty sources"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Usage Over Time",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/analytics/usage?days=30",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "analytics",
+                                "usage"
+                            ],
+                            "query": [
+                                {
+                                    "key": "days",
+                                    "value": "30",
+                                    "description": "Number of days to look back (1-365)"
+                                }
+                            ]
+                        },
+                        "description": "Get token usage and query volume over time.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns daily usage statistics (date, queries, tokens, avg_confidence, avg_latency_ms)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Analytics Overview",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/analytics/overview?days=30&top_limit=10&unanswered_limit=20",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "analytics",
+                                "overview"
+                            ],
+                            "query": [
+                                {
+                                    "key": "days",
+                                    "value": "30",
+                                    "description": "Number of days to look back (1-365)"
+                                },
+                                {
+                                    "key": "top_limit",
+                                    "value": "10",
+                                    "description": "Number of top queries to return (1-50)"
+                                },
+                                {
+                                    "key": "unanswered_limit",
+                                    "value": "20",
+                                    "description": "Number of unanswered queries to return (1-100)"
+                                }
+                            ]
+                        },
+                        "description": "Get all analytics sections in a single response.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `days` (optional): Number of days to look back (1-365, default: 30)\n- `top_limit` (optional): Number of top queries to return (1-50, default: 10)\n- `unanswered_limit` (optional): Number of unanswered queries to return (1-100, default: 20)\n\n**Response:**\n- Returns combined analytics data (summary, top_queries, unanswered, usage)"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Analytics endpoints for bot performance metrics and usage statistics"
+        },
+        {
+            "name": "Prompt Updates",
+            "item": [
+                {
+                    "name": "Generate Prompt from Feedback",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"feedback\": \"Make the responses more friendly and conversational. Always include citations when referring to sources.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/prompt/generate",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "prompt",
+                                "generate"
+                            ]
+                        },
+                        "description": "Generate an updated system prompt based on user feedback using AI.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `feedback` (required): User feedback about what needs to be updated in the system prompt\n\n**Response:**\n- Returns generated prompt (not saved to database)\n- Includes current_prompt, updated_prompt, and feedback\n- Use this to preview changes before saving"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Prompt Update",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set('prompt_update_id', jsonData.data.id);",
+                                    "        console.log('Prompt Update ID saved:', jsonData.data.id);",
+                                    "    }",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"new_prompt\": \"You are a friendly and helpful assistant. Answer questions clearly and always cite your sources.\",\n    \"reason\": \"Improved tone and added citation requirements\",\n    \"auto_apply\": false\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/prompt-updates",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "prompt-updates"
+                            ]
+                        },
+                        "description": "Create a new prompt update (saves to history).\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `new_prompt` (required): New system prompt text\n- `reason` (optional): Reason for the update (max 500 characters)\n- `auto_apply` (optional): Whether to automatically apply the update (default: false)\n  - If `true`: Prompt is saved and immediately applied to the bot\n  - If `false`: Prompt is saved to history but not applied (use Apply endpoint later)\n\n**Response:**\n- Returns created prompt update with ID\n- Automatically saves prompt_update_id to environment variable\n- If auto_apply=true, bot's system_prompt is updated immediately"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Prompt Updates",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/prompt-updates?limit=50",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "prompt-updates"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "50",
+                                    "description": "Maximum number of updates to return (1-100)"
+                                }
+                            ]
+                        },
+                        "description": "Get prompt update history for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Maximum number of updates to return (1-100)\n\n**Response:**\n- Returns list of prompt updates ordered by creation date (newest first)\n- Includes old_prompt, new_prompt, reason, auto_applied, created_at\n- Shows which updates were auto-applied vs saved for later"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Apply Prompt Update",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"update_id\": \"{{prompt_update_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/prompt",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "prompt"
+                            ]
+                        },
+                        "description": "Apply a prompt update to the bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `update_id` (required): ID of the prompt update to apply\n\n**Response:**\n- Returns updated bot with new system_prompt\n- Updates bot's system_prompt field in database\n- Use this to apply a previously saved prompt update"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Revert Prompt",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"update_id\": \"{{prompt_update_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/prompt/revert",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "prompt",
+                                "revert"
+                            ]
+                        },
+                        "description": "Revert bot to a previous prompt version.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `update_id` (required): ID of the prompt update to revert to (uses old_prompt from that update)\n\n**Response:**\n- Returns updated bot with reverted system_prompt\n- Creates a new prompt update record for the revert action\n- Bot's system_prompt is set to the old_prompt from the specified update"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Prompt update endpoints for managing system prompt versions and history"
+        },
+        {
+            "name": "Sandbox Query",
+            "item": [
+                {
+                    "name": "Test Prompt in Sandbox",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"query_text\": \"What does this bot know about our documentation?\",\n    \"custom_prompt\": \"You are a helpful assistant. Answer questions clearly and always cite sources.\",\n    \"top_k\": 5,\n    \"min_score\": 0.25,\n    \"chat_history\": [\n        {\n            \"text\": \"What is the product?\",\n            \"isUser\": true,\n            \"timestamp\": \"2024-01-01T00:00:00Z\"\n        },\n        {\n            \"text\": \"Our product is an AI assistant.\",\n            \"isUser\": false,\n            \"timestamp\": \"2024-01-01T00:00:01Z\"\n        }\n    ],\n    \"include_metadata\": true\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/bots/{{bot_id}}/query/sandbox",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "v1",
+                                "bots",
+                                "{{bot_id}}",
+                                "query",
+                                "sandbox"
+                            ]
+                        },
+                        "description": "Test a custom prompt without saving it to the bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `query_text` (required): User's question\n- `custom_prompt` (required): Custom system prompt to test\n- `top_k` (optional): Number of chunks to retrieve (1-20, default: 5)\n- `min_score` (optional): Minimum similarity score (0.0-1.0, default: 0.25)\n- `chat_history` (optional): Previous chat messages (last 5 messages)\n  - Format: Array of `{text: string, isUser: boolean, timestamp?: string}`\n- `include_metadata` (optional): Include detailed source metadata (default: true for sandbox)\n\n**Response:**\n- Returns answer with citations and confidence\n- Uses custom_prompt instead of bot's current system_prompt\n- Query is NOT logged to database (sandbox mode)\n- Use this to test prompt changes before applying them"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Sandbox query endpoint for testing custom prompts without saving changes"
         }
     ],
     "event": [
@@ -662,6 +1057,12 @@
             "value": "",
             "type": "string",
             "description": "Widget token for public widget queries (get from Create Widget Token endpoint)"
+        },
+        {
+            "key": "prompt_update_id",
+            "value": "",
+            "type": "string",
+            "description": "Prompt update ID (automatically saved from Create Prompt Update endpoint)"
         }
     ]
 }

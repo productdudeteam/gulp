@@ -7,6 +7,7 @@ from config.supabasedb import get_supabase_client
 from services.embedding_service import EmbeddingService
 from services.llm_service import LLMService
 from services.bot_service import BotService
+from services.plan_service import PlanService
 from repositories.query_repo import QueryRepository
 from repositories.source_repo import SourceRepository
 from core.exceptions import ValidationError, DatabaseError
@@ -62,6 +63,45 @@ class RagService:
             raise DatabaseError(f"Retrieval failed: {str(e)}")
 
     def answer(self, bot_id: UUID, user_id: Optional[str], query_text: str, top_k: int = 5, min_score: float = 0.25, session_id: Optional[str] = None, page_url: Optional[str] = None, include_metadata: bool = False, chat_history: Optional[List[Dict[str, str]]] = None, custom_prompt: Optional[str] = None) -> Dict[str, Any]:
+        # Check query limits before processing
+        plan_service = PlanService(use_service_role=True)
+        
+        # Get plan for bot owner (works for both authenticated and widget queries)
+        bot_plan = plan_service.get_plan_for_bot(str(bot_id))
+        
+        # Check query per bot per day limit
+        max_queries_per_day = bot_plan.get("max_queries_per_bot_per_day")
+        if max_queries_per_day is not None:
+            # Count queries for this bot today (since midnight UTC)
+            from datetime import datetime, timezone, timedelta
+            now = datetime.now(timezone.utc)
+            midnight_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            
+            try:
+                # Use service role to count queries
+                service_db = get_supabase_client(use_service_role=True)
+                query_count_resp = service_db.table("queries")\
+                    .select("*", count="exact")\
+                    .eq("bot_id", str(bot_id))\
+                    .gte("created_at", midnight_today.isoformat())\
+                    .execute()
+                
+                current_query_count = query_count_resp.count or 0
+                
+                if current_query_count >= max_queries_per_day:
+                    plan_name = bot_plan.get("display_name", "your plan")
+                    upgrade_email = "info@singlebit.xyz"
+                    raise ValidationError(
+                        f"You've reached the daily query limit ({max_queries_per_day} queries per bot per day) "
+                        f"on the {plan_name} plan. Payments are coming soon, but if you'd like "
+                        f"to use paid features now, please email us at {upgrade_email}."
+                    )
+            except ValidationError:
+                raise
+            except Exception as e:
+                logger.warning(f"Error checking query limit for bot {bot_id}: {str(e)}")
+                # Continue with query if limit check fails (fail open to avoid blocking)
+        
         # Retrieve context
         t0 = time.time()
         chunks = self.retrieve(bot_id, query_text, top_k=top_k, min_score=min_score)

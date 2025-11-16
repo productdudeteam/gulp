@@ -11,6 +11,7 @@ import logging
 
 from middleware.auth_guard import auth_guard
 from services.analytics_service import AnalyticsService
+from services.plan_service import PlanService
 from core.exceptions import ValidationError, DatabaseError, AuthorizationError
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,19 @@ async def get_top_queries(
         except Exception:
             pass
 
+        # Check if user has access to advanced analytics
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        analytics_tier = user_plan.get("analytics_tier", "basic")
+        if analytics_tier == "basic":
+            # Free plan: return empty list with upgrade message
+            return {
+                "status": "success",
+                "data": [],
+                "message": "Top queries are only available on paid plans. Payments are coming soon, but if you'd like to use paid features now, please email us at info@singlebit.xyz.",
+            }
+
         analytics = AnalyticsService(access_token=access_token)
         top_queries = analytics.get_top_queries(bot_id, str(user_id), access_token=access_token, limit=limit or 10, days=days or 30)
 
@@ -128,6 +142,19 @@ async def get_unanswered_queries(
             access_token = get_access_token_from_request(request)
         except Exception:
             pass
+
+        # Check if user has access to advanced analytics
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        analytics_tier = user_plan.get("analytics_tier", "basic")
+        if analytics_tier == "basic":
+            # Free plan: return empty list with upgrade message
+            return {
+                "status": "success",
+                "data": [],
+                "message": "Unanswered queries are only available on paid plans. Payments are coming soon, but if you'd like to use paid features now, please email us at info@singlebit.xyz.",
+            }
 
         analytics = AnalyticsService(access_token=access_token)
         unanswered = analytics.get_unanswered_queries(bot_id, str(user_id), access_token=access_token, limit=limit or 20, days=days or 30)
@@ -219,11 +246,24 @@ async def get_analytics_overview(
         except Exception:
             pass
 
+        # Check if user has access to advanced analytics
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        analytics_tier = user_plan.get("analytics_tier", "basic")
+        
         analytics = AnalyticsService(access_token=access_token)
         summary = analytics.get_summary_stats(bot_id, str(user_id), access_token=access_token, days=days or 30)
-        top_queries = analytics.get_top_queries(bot_id, str(user_id), access_token=access_token, limit=top_limit or 10, days=days or 30)
-        unanswered = analytics.get_unanswered_queries(bot_id, str(user_id), access_token=access_token, limit=unanswered_limit or 20, days=days or 30)
         usage = analytics.get_usage_over_time(bot_id, str(user_id), access_token=access_token, days=days or 30)
+        
+        # Only include advanced analytics if user has full tier
+        if analytics_tier == "full":
+            top_queries = analytics.get_top_queries(bot_id, str(user_id), access_token=access_token, limit=top_limit or 10, days=days or 30)
+            unanswered = analytics.get_unanswered_queries(bot_id, str(user_id), access_token=access_token, limit=unanswered_limit or 20, days=days or 30)
+        else:
+            # Basic tier: return empty arrays
+            top_queries = []
+            unanswered = []
 
         return {
             "status": "success",
@@ -232,6 +272,7 @@ async def get_analytics_overview(
                 "top_queries": top_queries,
                 "unanswered": unanswered,
                 "usage": usage,
+                "analytics_tier": analytics_tier,
             },
             "message": f"Analytics overview for the last {days} days",
         }

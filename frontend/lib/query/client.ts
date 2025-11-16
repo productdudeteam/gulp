@@ -54,5 +54,9 @@ export const queryKeys = {
       unansweredLimit,
     ] as const,
   },
+  plan: {
+    all: ["plan"] as const,
+    userPlan: () => ["plan", "user"] as const,
+  },
   // Add more query keys as needed
 } as const;

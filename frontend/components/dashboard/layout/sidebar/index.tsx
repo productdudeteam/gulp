@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Bot, Settings } from "lucide-react";
 import { RecentBots } from "@/components/dashboard/layout/sidebar/recent-bots";
 import { UserPopover } from "@/components/dashboard/layout/user-popover";
+import { PlanBadge } from "@/components/dashboard/layout/sidebar/plan-badge";
 import {
   Sidebar,
   SidebarContent,
@@ -135,6 +136,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
+        <PlanBadge />
         <UserPopover />
       </SidebarFooter>
       <SidebarRail />

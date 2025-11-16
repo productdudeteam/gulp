@@ -2,6 +2,7 @@ from typing import Dict, Any, Optional, List
 import logging
 from models.bot_model import BotCreateModel, BotUpdateModel
 from repositories.bot_repo import BotRepository
+from services.plan_service import PlanService
 from core.exceptions import ValidationError, NotFoundError, AuthorizationError
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,26 @@ class BotService:
             # Get repository with user's access token for RLS
             repository = self._get_repository(access_token=access_token)
             
+            # Check plan limits before creating bot
+            plan_service = PlanService(use_service_role=True)
+            user_plan = plan_service.get_plan_for_user(user_id)
+            
+            # Get current bot count for user
+            existing_bots = repository.get_bots_by_user(user_id)
+            current_bot_count = len(existing_bots)
+            
+            # Check if bot limit is exceeded
+            is_within_limit, error_msg = plan_service.check_plan_limit(
+                plan=user_plan,
+                limit_key="max_bots_per_user",
+                current_count=current_bot_count,
+                entity_name="bots"
+            )
+            
+            if not is_within_limit:
+                logger.warning(f"Bot creation limit exceeded: user_id={user_id}, current={current_bot_count}, limit={user_plan.get('max_bots_per_user')}")
+                raise ValidationError(error_msg or "Bot creation limit exceeded")
+            
             # Prepare data for repository
             bot_data = {
                 "name": bot.name,
@@ -38,6 +59,8 @@ class BotService:
             result = repository.create_bot(bot_data)
             logger.info(f"Bot created: id={result.get('id')}, user_id={user_id}, name={bot.name}")
             return result
+        except ValidationError:
+            raise
         except Exception as e:
             logger.error(f"Bot creation failed: user_id={user_id}, name={bot.name}, error={str(e)}")
             raise

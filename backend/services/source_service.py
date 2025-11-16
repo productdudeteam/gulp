@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from core.exceptions import ValidationError, NotFoundError, AuthorizationError, DatabaseError
 from repositories.source_repo import SourceRepository
 from services.bot_service import BotService
+from services.plan_service import PlanService
 from models.source_model import SourceType, SourceStatus
 from config.supabasedb import get_supabase_client
 
@@ -104,10 +105,37 @@ class SourceService:
         if source_type not in (SourceType.PDF, SourceType.DOCX, SourceType.TEXT):
             raise ValidationError(f"Invalid source type for file upload: {source_type}")
 
-        # Validate file size (max 50MB)
-        MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
+        # Get user plan to check limits
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        # Check document limit per bot
+        existing_sources = self.get_sources_by_bot(bot_id, user_id)
+        # Count document sources (pdf, docx, text) for this bot
+        document_sources = [s for s in existing_sources if s.get("source_type") in ("pdf", "docx", "text")]
+        current_doc_count = len(document_sources)
+        
+        # Check if document limit is exceeded
+        is_within_limit, error_msg = plan_service.check_plan_limit(
+            plan=user_plan,
+            limit_key="max_docs_per_bot",
+            current_count=current_doc_count,
+            entity_name="documents"
+        )
+        
+        if not is_within_limit:
+            logger.warning(f"Document limit exceeded: bot_id={bot_id}, current={current_doc_count}, limit={user_plan.get('max_docs_per_bot')}")
+            raise ValidationError(error_msg or "Document limit exceeded")
+        
+        # Check file size limit based on plan
+        max_file_size_mb = user_plan.get("max_doc_size_mb", 5)
+        MAX_FILE_SIZE = max_file_size_mb * 1024 * 1024
         if file_size > MAX_FILE_SIZE:
-            raise ValidationError(f"File size exceeds maximum allowed size of {MAX_FILE_SIZE / 1024 / 1024}MB")
+            raise ValidationError(
+                f"File size exceeds maximum allowed size of {max_file_size_mb}MB for your plan. "
+                f"Payments are coming soon, but if you'd like to use paid features now, "
+                f"please email us at info@singlebit.xyz."
+            )
 
         if file_size <= 0:
             raise ValidationError("File size must be greater than 0")
@@ -149,6 +177,28 @@ class SourceService:
         # Verify user owns the bot
         bot_service = BotService()
         bot_service.get_bot(str(bot_id), str(user_id), access_token=self.access_token)
+
+        # Get user plan to check limits
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        # Check URL limit per bot
+        existing_sources = self.get_sources_by_bot(bot_id, user_id)
+        # Count URL sources (html) for this bot
+        url_sources = [s for s in existing_sources if s.get("source_type") == "html"]
+        current_url_count = len(url_sources)
+        
+        # Check if URL limit is exceeded
+        is_within_limit, error_msg = plan_service.check_plan_limit(
+            plan=user_plan,
+            limit_key="max_urls_per_bot",
+            current_count=current_url_count,
+            entity_name="URLs"
+        )
+        
+        if not is_within_limit:
+            logger.warning(f"URL limit exceeded: bot_id={bot_id}, current={current_url_count}, limit={user_plan.get('max_urls_per_bot')}")
+            raise ValidationError(error_msg or "URL limit exceeded")
 
         # Validate and normalize URL
         canonical_url, original_url = self._validate_url(url)

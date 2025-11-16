@@ -22,27 +22,42 @@ const plans = [
     popular: false,
     features: [
       "1 chatbot",
-      "Up to 10 documents",
+      "20 queries per bot per day",
+      "2 documents (5MB each)",
+      "1 URL per bot",
+      "1 widget token per bot",
       "Basic analytics",
       "OpenAI or Gemini",
-      "Community support",
-      "Standard response time",
     ],
   },
   {
-    name: "Pro",
-    price: "$29",
+    name: "Starter",
+    price: "Coming Soon",
     description: "For growing businesses and teams",
     popular: true,
     features: [
-      "Unlimited chatbots",
-      "Unlimited documents",
-      "Advanced analytics",
-      "Priority support",
-      "Custom branding",
-      "API access",
-      "Export conversations",
-      "Team collaboration",
+      "5 chatbots",
+      "250 queries per bot per day",
+      "5 documents (20MB each)",
+      "2 URLs per bot",
+      "3 widget tokens per bot",
+      "Train Mode",
+      "Full Analytics",
+    ],
+  },
+  {
+    name: "Growth",
+    price: "Coming Soon",
+    description: "For scaling businesses with higher volume needs",
+    popular: false,
+    features: [
+      "20 chatbots",
+      "Unlimited queries",
+      "20 documents (30MB each)",
+      "6 URLs per bot",
+      "10 widget tokens per bot",
+      "Train Mode",
+      "Full Analytics",
     ],
   },
   {
@@ -51,14 +66,15 @@ const plans = [
     description: "For large organizations with custom needs",
     popular: false,
     features: [
-      "Everything in Pro",
+      "Custom limits",
+      "Unlimited queries",
+      "Custom document limits",
+      "50 URLs per bot",
+      "50 widget tokens per bot",
+      "Train Mode",
+      "Full Analytics",
       "Dedicated support",
       "Custom integrations",
-      "SLA guarantees",
-      "On-premise deployment",
-      "Advanced security",
-      "Training sessions",
-      "Custom development",
     ],
   },
 ];
@@ -67,11 +83,16 @@ export default function Pricing() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
 
-  const handleGetStarted = () => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
+  const handleGetStarted = (planName: string) => {
+    if (planName === "Free") {
+      if (isAuthenticated) {
+        router.push("/dashboard");
+      } else {
+        router.push("/signup");
+      }
     } else {
-      router.push("/signup");
+      // For paid plans, redirect to payments coming soon page
+      router.push("/payments-coming-soon");
     }
   };
   return (
@@ -86,7 +107,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {plans.map((plan, index) => (
             <Card
               key={index}
@@ -132,9 +153,14 @@ export default function Pricing() {
                   <span className="text-3xl font-bold text-primary">
                     {plan.price}
                   </span>
-                  {plan.price !== "Custom" && (
+                  {plan.price === "$0" && (
                     <span className="text-sm text-foreground/60 ml-1">
-                      /one-time
+                      /forever
+                    </span>
+                  )}
+                  {plan.price === "Coming Soon" && (
+                    <span className="text-sm text-foreground/60 ml-1 block mt-1">
+                      Payments coming soon
                     </span>
                   )}
                 </div>
@@ -160,15 +186,22 @@ export default function Pricing() {
                   {plan.price === "Custom" ? (
                     <InteractiveHoverButton
                       onClick={() =>
-                        window.open("mailto:hello@nbarkiya.xyz", "_blank")
+                        window.open("mailto:info@singlebit.xyz", "_blank")
                       }
                       className="w-full"
                     >
                       Contact Sales
                     </InteractiveHoverButton>
+                  ) : plan.price === "Coming Soon" ? (
+                    <InteractiveHoverButton
+                      onClick={() => handleGetStarted(plan.name)}
+                      className="w-full"
+                    >
+                      Request Access
+                    </InteractiveHoverButton>
                   ) : (
                     <InteractiveHoverButton
-                      onClick={handleGetStarted}
+                      onClick={() => handleGetStarted(plan.name)}
                       className="w-full"
                     >
                       {plan.price === "$0" ? "Get Started Free" : "Start Free Trial"}

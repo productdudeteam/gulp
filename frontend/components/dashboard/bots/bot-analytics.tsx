@@ -9,8 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useAnalyticsOverview } from "@/lib/query/hooks/analytics";
+import { usePlanFeatures } from "@/lib/query/hooks/plan";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import Link from "next/link";
+import { Mail, Lock } from "lucide-react";
 
 interface BotAnalyticsProps {
   botId: string;
@@ -57,6 +60,8 @@ const downloadCSV = (csv: string, filename: string) => {
 
 export default function BotAnalytics({ botId }: BotAnalyticsProps) {
   const [timeRange, setTimeRange] = useState("30");
+  
+  const { hasFullAnalytics, analyticsTier } = usePlanFeatures();
 
   // Single analytics overview query
   const { data: overview, isLoading } = useAnalyticsOverview(
@@ -394,23 +399,30 @@ export default function BotAnalytics({ botId }: BotAnalyticsProps) {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-2">
                 <CardTitle>Top Queries</CardTitle>
-                <CardDescription>
-                  Most frequently asked questions
-                </CardDescription>
+                {!hasFullAnalytics && (
+                  <Lock className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={exportTopQueries}
-                disabled={!topQueries || topQueries.length === 0}
-                className="gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Export CSV
-              </Button>
+              {hasFullAnalytics && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={exportTopQueries}
+                  disabled={!topQueries || topQueries.length === 0}
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Export CSV
+                </Button>
+              )}
             </div>
+            <CardDescription>
+              {hasFullAnalytics
+                ? "Most frequently asked questions"
+                : "Available on paid plans"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -422,6 +434,32 @@ export default function BotAnalytics({ botId }: BotAnalyticsProps) {
                     <Skeleton className="h-4 w-16" />
                   </div>
                 ))}
+              </div>
+            ) : !hasFullAnalytics ? (
+              <div className="text-center py-8 space-y-4">
+                <div className="p-4 border border-primary/20 rounded-lg bg-muted/50">
+                  <Lock className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Top Queries are only available on paid plans.
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    Payments are coming soon, but if you&apos;d like to use paid features now,
+                    please email us at{" "}
+                    <Link
+                      href="mailto:info@singlebit.xyz"
+                      className="text-primary hover:underline font-medium"
+                    >
+                      info@singlebit.xyz
+                    </Link>
+                    .
+                  </p>
+                  <Link href="/payments-coming-soon">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Mail className="h-4 w-4" />
+                      Learn More
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ) : topQueries && topQueries.length > 0 ? (
               <div className="space-y-4">
@@ -451,23 +489,30 @@ export default function BotAnalytics({ botId }: BotAnalyticsProps) {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-2">
                 <CardTitle>Potential Issues</CardTitle>
-                <CardDescription>
-                  Queries that may need attention
-                </CardDescription>
+                {!hasFullAnalytics && (
+                  <Lock className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={exportUnansweredQueries}
-                disabled={!unanswered || unanswered.length === 0}
-                className="gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Export CSV
-              </Button>
+              {hasFullAnalytics && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={exportUnansweredQueries}
+                  disabled={!unanswered || unanswered.length === 0}
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Export CSV
+                </Button>
+              )}
             </div>
+            <CardDescription>
+              {hasFullAnalytics
+                ? "Queries that may need attention"
+                : "Available on paid plans"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -478,6 +523,32 @@ export default function BotAnalytics({ botId }: BotAnalyticsProps) {
                     <Skeleton className="h-3 w-3/4" />
                   </div>
                 ))}
+              </div>
+            ) : !hasFullAnalytics ? (
+              <div className="text-center py-8 space-y-4">
+                <div className="p-4 border border-primary/20 rounded-lg bg-muted/50">
+                  <Lock className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Unanswered Queries are only available on paid plans.
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    Payments are coming soon, but if you&apos;d like to use paid features now,
+                    please email us at{" "}
+                    <Link
+                      href="mailto:info@singlebit.xyz"
+                      className="text-primary hover:underline font-medium"
+                    >
+                      info@singlebit.xyz
+                    </Link>
+                    .
+                  </p>
+                  <Link href="/payments-coming-soon">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Mail className="h-4 w-4" />
+                      Learn More
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ) : unanswered && unanswered.length > 0 ? (
               <div className="space-y-4">

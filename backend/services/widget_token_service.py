@@ -15,6 +15,7 @@ import logging
 from core.exceptions import ValidationError, NotFoundError, AuthorizationError
 from repositories.widget_token_repo import WidgetTokenRepository
 from services.bot_service import BotService
+from services.plan_service import PlanService
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,26 @@ class WidgetTokenService:
         # Verify user owns the bot
         bot_service = BotService()
         bot = bot_service.get_bot(str(bot_id), str(user_id), access_token=self.access_token)
+
+        # Get user plan to check limits
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        # Check widget token limit per bot
+        existing_tokens = self.get_tokens_by_bot(bot_id, user_id)
+        current_token_count = len(existing_tokens)
+        
+        # Check if widget token limit is exceeded
+        is_within_limit, error_msg = plan_service.check_plan_limit(
+            plan=user_plan,
+            limit_key="max_widget_tokens_per_bot",
+            current_count=current_token_count,
+            entity_name="widget tokens"
+        )
+        
+        if not is_within_limit:
+            logger.warning(f"Widget token limit exceeded: bot_id={bot_id}, current={current_token_count}, limit={user_plan.get('max_widget_tokens_per_bot')}")
+            raise ValidationError(error_msg or "Widget token limit exceeded")
 
         # Validate expiration date
         from datetime import timezone

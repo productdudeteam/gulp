@@ -473,7 +473,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding,background-color,color] hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 active:bg-primary active:text-primary-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-primary data-[active=true]:font-medium data-[active=true]:text-primary-foreground data-[state=open]:hover:bg-primary data-[state=open]:hover:text-primary-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding,background-color,color] hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 active:bg-primary active:text-primary-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-primary data-[active=true]:font-medium data-[active=true]:text-primary-foreground data-[state=open]:hover:bg-primary data-[state=open]:hover:text-primary-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -494,6 +494,26 @@ const sidebarMenuButtonVariants = cva(
   }
 );
 
+// Helper function to extract text from React children
+function extractTextFromChildren(children: React.ReactNode): string {
+  if (typeof children === "string") {
+    return children;
+  }
+  if (typeof children === "number") {
+    return String(children);
+  }
+  if (React.isValidElement(children)) {
+    const props = children.props as { children?: React.ReactNode };
+    if (props.children) {
+      return extractTextFromChildren(props.children);
+    }
+  }
+  if (Array.isArray(children)) {
+    return children.map(extractTextFromChildren).join(" ").trim();
+  }
+  return "";
+}
+
 function SidebarMenuButton({
   asChild = false,
   isActive = false,
@@ -501,14 +521,27 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  children,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean;
   isActive?: boolean;
-  tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+  tooltip?:
+    | string
+    | React.ReactNode
+    | React.ComponentProps<typeof TooltipContent>;
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button";
   const { isMobile, state } = useSidebar();
+  const isCollapsed = state === "collapsed" && !isMobile;
+
+  // Auto-extract tooltip text from children when collapsed and no tooltip is provided
+  const tooltipValue =
+    tooltip !== undefined
+      ? tooltip
+      : isCollapsed
+        ? extractTextFromChildren(children)
+        : undefined;
 
   const button = (
     <Comp
@@ -518,28 +551,52 @@ function SidebarMenuButton({
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
       {...props}
-    />
+    >
+      {children}
+    </Comp>
   );
 
-  if (!tooltip) {
+  if (!tooltipValue || !isCollapsed) {
     return button;
   }
 
-  if (typeof tooltip === "string") {
-    tooltip = {
-      children: tooltip,
-    };
+  // Handle tooltip - can be string, React element, or props object
+  let tooltipContent: React.ReactNode;
+  let tooltipProps: Omit<
+    React.ComponentProps<typeof TooltipContent>,
+    "children"
+  > = {
+    side: "right",
+    align: "center",
+    hidden: !isCollapsed,
+  };
+
+  if (typeof tooltipValue === "string") {
+    tooltipContent = tooltipValue;
+  } else if (React.isValidElement(tooltipValue)) {
+    // If it's a React element, use it as children
+    tooltipContent = tooltipValue;
+  } else if (
+    tooltipValue &&
+    typeof tooltipValue === "object" &&
+    "children" in tooltipValue
+  ) {
+    // If it's props object, extract children and merge props
+    const propsObj = tooltipValue as React.ComponentProps<
+      typeof TooltipContent
+    >;
+    tooltipContent = propsObj.children;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { children, ...restProps } = propsObj;
+    tooltipProps = { ...tooltipProps, ...restProps };
+  } else {
+    return button;
   }
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== "collapsed" || isMobile}
-        {...tooltip}
-      />
+      <TooltipContent {...tooltipProps}>{tooltipContent}</TooltipContent>
     </Tooltip>
   );
 }

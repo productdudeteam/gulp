@@ -6,6 +6,7 @@
 import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNotifications } from "@/lib/hooks/use-notifications";
+import { extractErrorMessage, getErrorTitle } from "@/lib/utils/error-extractor";
 import type {
   Source,
   SourceCreateInput,
@@ -189,7 +190,9 @@ export function useUploadFileSource(botId: string) {
       );
     },
     onError: (err) => {
-      error("Upload Failed", err.message || "Failed to upload file.");
+      const errorMessage = extractErrorMessage(err);
+      const errorTitle = getErrorTitle(err);
+      error(errorTitle, errorMessage);
     },
   });
 }
@@ -212,7 +215,9 @@ export function useCreateUrlSource(botId: string) {
       );
     },
     onError: (err) => {
-      error("Failed to Add URL", err.message || "Failed to add URL source.");
+      const errorMessage = extractErrorMessage(err);
+      const errorTitle = getErrorTitle(err);
+      error(errorTitle, errorMessage);
     },
   });
 }
@@ -231,7 +236,9 @@ export function useDeleteSource(botId: string) {
       success("Source Deleted", "Source deleted successfully!");
     },
     onError: (err) => {
-      error("Deletion Failed", err.message || "Failed to delete source.");
+      const errorMessage = extractErrorMessage(err);
+      const errorTitle = getErrorTitle(err);
+      error(errorTitle, errorMessage);
     },
   });
 }

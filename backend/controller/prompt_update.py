@@ -14,6 +14,7 @@ from starlette.concurrency import run_in_threadpool
 from middleware.auth_guard import auth_guard
 from services.prompt_update_service import PromptUpdateService
 from services.bot_service import BotService
+from services.plan_service import PlanService
 from services.llm_service import LLMService
 from core.exceptions import ValidationError, DatabaseError, AuthorizationError, NotFoundError
 
@@ -54,6 +55,18 @@ async def create_prompt_update(
             access_token = get_access_token_from_request(request)
         except Exception:
             pass
+
+        # Check if user has access to train feature
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        can_access, error_msg = plan_service.can_access_feature(user_plan, "train_enabled")
+        if not can_access:
+            logger.warning(f"Train feature access denied: user_id={user_id}, plan={user_plan.get('plan_key')}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_msg or "Train feature is not available on your plan"
+            )
 
         service = PromptUpdateService(access_token=access_token)
         update = service.create_prompt_update(
@@ -152,6 +165,18 @@ async def apply_prompt_update(
         except Exception:
             pass
 
+        # Check if user has access to train feature
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        can_access, error_msg = plan_service.can_access_feature(user_plan, "train_enabled")
+        if not can_access:
+            logger.warning(f"Train feature access denied: user_id={user_id}, plan={user_plan.get('plan_key')}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_msg or "Train feature is not available on your plan"
+            )
+
         service = PromptUpdateService(access_token=access_token)
         updated_bot = service.apply_prompt_update(bot_id, str(user_id), update_id)
 
@@ -199,6 +224,18 @@ async def revert_prompt(
         except Exception:
             pass
 
+        # Check if user has access to train feature
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        can_access, error_msg = plan_service.can_access_feature(user_plan, "train_enabled")
+        if not can_access:
+            logger.warning(f"Train feature access denied: user_id={user_id}, plan={user_plan.get('plan_key')}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_msg or "Train feature is not available on your plan"
+            )
+
         service = PromptUpdateService(access_token=access_token)
         updated_bot = service.revert_to_prompt(bot_id, str(user_id), update_id)
 
@@ -245,6 +282,18 @@ async def generate_prompt_from_feedback(
             access_token = get_access_token_from_request(request)
         except Exception:
             pass
+
+        # Check if user has access to train feature
+        plan_service = PlanService(use_service_role=True)
+        user_plan = plan_service.get_plan_for_user(str(user_id))
+        
+        can_access, error_msg = plan_service.can_access_feature(user_plan, "train_enabled")
+        if not can_access:
+            logger.warning(f"Train feature access denied: user_id={user_id}, plan={user_plan.get('plan_key')}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_msg or "Train feature is not available on your plan"
+            )
 
         # Get the current bot and its prompt
         bot_service = BotService()

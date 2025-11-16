@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,13 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useNotifications } from "@/lib/hooks/use-notifications";
-import { useCreateBot } from "@/lib/query/hooks/bots";
+import { useBots, useCreateBot } from "@/lib/query/hooks/bots";
+import { usePlanFeatures } from "@/lib/query/hooks/plan";
 import type { BotCreateInput, LLMProvider } from "@/lib/types/bot";
+import {
+  extractErrorMessage,
+  getErrorTitle,
+} from "@/lib/utils/error-extractor";
 
 interface BotCreateDialogProps {
   open: boolean;
@@ -38,6 +46,8 @@ export default function BotCreateDialog({
   const router = useRouter();
   const createBot = useCreateBot();
   const { success, error: showError } = useNotifications();
+  const { plan, limits, isLoading: planLoading } = usePlanFeatures();
+  const { data: bots } = useBots();
 
   const [formData, setFormData] = useState<BotCreateInput>({
     name: "",
@@ -86,8 +96,10 @@ export default function BotCreateDialog({
         router.push(`/dashboard/bots/${newBot.id}`);
       },
       onError: (error: unknown) => {
-        showError("Create Failed", "Failed to create bot. Please try again.");
-        console.error("Create error:", error);
+        const errorMessage = extractErrorMessage(error);
+        const errorTitle = getErrorTitle(error);
+        showError(errorTitle, errorMessage);
+        console.error("Create bot error:", error);
       },
     });
   };
@@ -103,6 +115,46 @@ export default function BotCreateDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Plan Limit Warning */}
+          {!planLoading && plan && limits && bots && (
+            <>
+              {bots.length >= limits.maxBots && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-sm">
+                    You&apos;ve reached your bot limit ({limits.maxBots} bot
+                    {limits.maxBots !== 1 ? "s" : ""} on the {plan.display_name}{" "}
+                    plan).
+                    {plan.plan_key === "free" && (
+                      <>
+                        {" "}
+                        Payments are coming soon, but if you&apos;d like to use
+                        paid features now, please email us at{" "}
+                        <Link
+                          href="mailto:info@singlebit.xyz"
+                          className="underline font-medium"
+                        >
+                          info@singlebit.xyz
+                        </Link>
+                        .
+                      </>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              )}
+              {bots.length < limits.maxBots && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-sm">
+                    You have {bots.length} of {limits.maxBots} bot
+                    {limits.maxBots !== 1 ? "s" : ""} available on the{" "}
+                    {plan.display_name} plan.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </>
+          )}
+
           {/* Basic Information */}
           <div className="space-y-4">
             <div className="space-y-2">
@@ -300,7 +352,18 @@ export default function BotCreateDialog({
             </Button>
             <Button
               type="submit"
-              disabled={createBot.isPending}
+              disabled={
+                createBot.isPending ||
+                Boolean(
+                  !planLoading &&
+                    plan &&
+                    limits &&
+                    bots &&
+                    limits.maxBots !== null &&
+                    limits.maxBots > 0 &&
+                    bots.length >= limits.maxBots
+                )
+              }
               className="gap-2"
             >
               <Plus className="h-4 w-4" />

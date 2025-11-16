@@ -8,3 +8,4 @@ export * from "./chunks";
 export * from "./query";
 export * from "./analytics";
 export * from "./prompt-updates";
+export * from "./plan";

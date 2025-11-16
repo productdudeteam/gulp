@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { extractErrorMessage } from "@/lib/utils/error-extractor";
 import {
   Bot as BotIcon,
   ChevronDown,
@@ -246,11 +247,12 @@ export default function BotTestChat({ bot }: BotTestChatProps) {
           confidence: res.confidence,
         };
         setMessages((prev) => [...prev, aiMessage]);
-      } catch {
+      } catch (error) {
+        const errorMessage = extractErrorMessage(error);
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: "Sorry, I couldn't process that query. Please try again.",
+          content: `**Error:** ${errorMessage}`,
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);

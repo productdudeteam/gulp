@@ -2,7 +2,7 @@
     "info": {
         "_postman_id": "gulp-api-collection",
         "name": "Gulp API",
-        "description": "Complete API collection for Gulp chatbot platform with bot management, authentication, RAG features, and embeddable widget support.\n\n**Features:**\n- Bot management (CRUD)\n- Widget token management\n- Source management (files & URLs)\n- RAG query engine (authenticated & public widget endpoints)\n- Chat history support (last 5 messages)\n- CORS-enabled widget queries",
+        "description": "Complete API collection for Gulp chatbot platform with bot management, authentication, RAG features, and embeddable widget support.\n\n**Features:**\n- Bot management (CRUD)\n- Widget token management\n- Source management (files & URLs)\n- RAG query engine (authenticated & public widget endpoints)\n- Chat history support (last 5 messages)\n- CORS-enabled widget queries\n- Subscription plan management with usage limits\n- Plan-based feature gating (Train Mode, Analytics)",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "_exporter_id": "gulp-api"
     },
@@ -62,6 +62,26 @@
             "description": "User authentication endpoints"
         },
         {
+            "name": "Plan Management",
+            "item": [
+                {
+                    "name": "Get User Plan",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/user/plan",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "user", "plan"]
+                        },
+                        "description": "Get the current authenticated user's subscription plan details.\n\n**Authentication:** Required\n\n**Response:**\n- Returns user's current plan with limits and features:\n  - `plan`: Plan details (plan_key, plan_category, display_name, description)\n  - `plan.max_bots_per_user`: Maximum bots allowed\n  - `plan.max_queries_per_bot_per_day`: Daily query limit per bot (null = unlimited)\n  - `plan.max_docs_per_bot`: Maximum documents per bot\n  - `plan.max_doc_size_mb`: Maximum document size in MB\n  - `plan.max_urls_per_bot`: Maximum URLs per bot\n  - `plan.max_widget_tokens_per_bot`: Maximum widget tokens per bot\n  - `plan.train_enabled`: Whether Train Mode is available\n  - `plan.analytics_tier`: 'basic' or 'full' (full includes Top Queries & Unanswered Queries)\n  - `subscription_id`: Active subscription ID (if any)\n  - `status`: Subscription status\n  - `starts_at`: Subscription start date\n  - `ends_at`: Subscription end date (null for free/lifetime plans)\n\n**Plan Categories:**\n- `free`: Free plan (1 bot, 20 queries/day, 2 docs, 1 URL, basic analytics)\n- `paid1` (Starter): 5 bots, 250 queries/day, 5 docs, 2 URLs, Train Mode, full analytics\n- `paid2` (Growth): 20 bots, unlimited queries, 20 docs, 6 URLs, Train Mode, full analytics\n- `enterprise`: Custom limits, unlimited queries, Train Mode, full analytics"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Subscription plan endpoints for viewing user plan details and limitations"
+        },
+        {
             "name": "Bot Management",
             "item": [
                 {
@@ -105,7 +125,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "bots"]
                         },
-                        "description": "Create a new bot.\n\n**Authentication:** Required\n**Request Body:**\n- `name` (required): Bot name (1-100 characters)\n- `description` (optional): Bot description (max 500 characters)\n- `system_prompt` (optional): Custom system prompt\n- `llm_provider` (optional): 'openai' or 'gemini' (default: 'openai')\n- `llm_config` (optional): LLM configuration\n  - `temperature`: 0.0-2.0 (default: 0.7)\n  - `max_tokens`: 1-4000 (default: 1000)\n  - `model_name`: Model name (default: 'gpt-4o')\n- `retention_days` (optional): Query log retention (1-3650 days, default: 90)\n\n**Response:**\n- Returns created bot with ID\n- Automatically saves bot_id to environment variable"
+                        "description": "Create a new bot.\n\n**Authentication:** Required\n**Plan Limits:**\n- Checked against `max_bots_per_user` from user's plan\n- Returns 400 error if bot limit is reached\n- Error message includes plan details and upgrade contact email\n\n**Request Body:**\n- `name` (required): Bot name (1-100 characters)\n- `description` (optional): Bot description (max 500 characters)\n- `system_prompt` (optional): Custom system prompt\n- `llm_provider` (optional): 'openai' or 'gemini' (default: 'openai')\n- `llm_config` (optional): LLM configuration\n  - `temperature`: 0.0-2.0 (default: 0.7)\n  - `max_tokens`: 1-4000 (default: 1000)\n  - `model_name`: Model name (default: 'gpt-4o')\n- `retention_days` (optional): Query log retention (1-3650 days, default: 90)\n\n**Response:**\n- Returns created bot with ID\n- Automatically saves bot_id to environment variable\n- Returns 400 with plan limit error if quota exceeded"
                     },
                     "response": []
                 },
@@ -237,7 +257,7 @@
                                 "widget-tokens"
                             ]
                         },
-                        "description": "Create a new widget token for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `name` (optional): Descriptive name for the token\n- `allowed_domains` (required): Array of allowed domains/origins\n  - Must include at least one domain\n  - Accepts full URLs (https://example.com) or domain names (example.com)\n  - Supports localhost for development\n- `expires_at` (optional): ISO 8601 timestamp for token expiration\n\n**Response:**\n- Returns token data with plain token (shown only once)\n- **IMPORTANT:** Save the token immediately - it won't be returned again\n- Token is hashed before storage (SHA-256)\n- Token prefix (first 8 chars) is shown for identification"
+                        "description": "Create a new widget token for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Checked against `max_widget_tokens_per_bot` from user's plan\n- Returns 400 error if token limit is reached for this bot\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `name` (optional): Descriptive name for the token\n- `allowed_domains` (required): Array of allowed domains/origins\n  - Must include at least one domain\n  - Accepts full URLs (https://example.com) or domain names (example.com)\n  - Supports localhost for development\n- `expires_at` (optional): ISO 8601 timestamp for token expiration\n\n**Response:**\n- Returns token data with plain token (shown only once)\n- **IMPORTANT:** Save the token immediately - it won't be returned again\n- Token is hashed before storage (SHA-256)\n- Token prefix (first 8 chars) is shown for identification\n- Returns 400 with plan limit error if quota exceeded"
                     },
                     "response": []
                 },
@@ -333,7 +353,7 @@
                                 "upload"
                             ]
                         },
-                        "description": "Upload a file source (PDF, DOCX, or TXT) for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `file` (required): PDF, DOCX, or TXT file (max 50MB)\n\n**Supported File Types:**\n- PDF: `.pdf`, `application/pdf`\n- DOCX: `.docx`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`\n- TXT: `.txt`, `text/plain`\n\n**Response:**\n- Returns created source with ID and status\n- File is uploaded to Supabase Storage\n- Source status starts as 'uploaded'\n- Automatically saves source_id to environment variable"
+                        "description": "Upload a file source (PDF, DOCX, or TXT) for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Checked against `max_docs_per_bot` from user's plan\n- Checked against `max_doc_size_mb` for file size limit\n- Returns 400 error if document count or size limit is reached\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `file` (required): PDF, DOCX, or TXT file\n  - Free plan: Max 5MB per file, 2 documents per bot\n  - Starter plan: Max 20MB per file, 5 documents per bot\n  - Growth plan: Max 30MB per file, 20 documents per bot\n  - Enterprise plan: Max 100MB per file, 999 documents per bot\n\n**Supported File Types:**\n- PDF: `.pdf`, `application/pdf`\n- DOCX: `.docx`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`\n- TXT: `.txt`, `text/plain`\n\n**Response:**\n- Returns created source with ID and status\n- File is uploaded to Supabase Storage\n- Source status starts as 'uploaded'\n- Automatically saves source_id to environment variable\n- Returns 400 with plan limit error if quota exceeded"
                     },
                     "response": []
                 },
@@ -385,7 +405,7 @@
                                 "url"
                             ]
                         },
-                        "description": "Submit a URL as a source for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `source_type` (required): Must be \"html\"\n- `original_url` (required): Valid HTTP/HTTPS URL\n\n**Response:**\n- Returns created source with canonical URL\n- Source status starts as 'uploaded'\n- URL will be crawled and indexed in future phases\n- Automatically saves source_id to environment variable"
+                        "description": "Submit a URL as a source for a bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Checked against `max_urls_per_bot` from user's plan\n- Returns 400 error if URL limit is reached for this bot\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `source_type` (required): Must be \"html\"\n- `original_url` (required): Valid HTTP/HTTPS URL\n\n**URL Limits by Plan:**\n- Free plan: 1 URL per bot\n- Starter plan: 2 URLs per bot\n- Growth plan: 6 URLs per bot\n- Enterprise plan: 50 URLs per bot\n\n**Response:**\n- Returns created source with canonical URL\n- Source status starts as 'uploaded'\n- URL will be crawled and indexed in future phases\n- Automatically saves source_id to environment variable\n- Returns 400 with plan limit error if quota exceeded"
                     },
                     "response": []
                 },
@@ -545,7 +565,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "bots", "{{bot_id}}", "query"]
                         },
-                        "description": "Run a RAG query against a bot (authenticated endpoint).\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `query_text` (required): User's question\n- `top_k` (optional): Number of chunks to retrieve (1-20, default: 5)\n- `min_score` (optional): Minimum similarity score (0.0-1.0, default: 0.25)\n- `session_id` (optional): Session identifier for chat history\n- `page_url` (optional): Origin URL of the query\n- `chat_history` (optional): Previous chat messages from client (last 5 messages)\n  - Format: Array of `{text: string, isUser: boolean, timestamp?: string}`\n- `include_metadata` (optional): Include detailed source metadata (default: false)\n\n**Response:**\n- Returns answer with citations\n- Includes session_id and page_url in response\n- Chat history included in LLM context if provided"
+                        "description": "Run a RAG query against a bot (authenticated endpoint).\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Checked against `max_queries_per_bot_per_day` from bot owner's plan\n- Daily limit resets at midnight UTC\n- Returns 400 error if daily query limit is reached\n- Error message includes plan details and upgrade contact email\n- Free plan: 20 queries per bot per day\n- Starter plan: 250 queries per bot per day\n- Growth/Enterprise: Unlimited queries\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `query_text` (required): User's question\n- `top_k` (optional): Number of chunks to retrieve (1-20, default: 5)\n- `min_score` (optional): Minimum similarity score (0.0-1.0, default: 0.25)\n- `session_id` (optional): Session identifier for chat history\n- `page_url` (optional): Origin URL of the query\n- `chat_history` (optional): Previous chat messages from client (last 5 messages)\n  - Format: Array of `{text: string, isUser: boolean, timestamp?: string}`\n- `include_metadata` (optional): Include detailed source metadata (default: false)\n\n**Response:**\n- Returns answer with citations\n- Includes session_id and page_url in response\n- Chat history included in LLM context if provided\n- Returns 400 with plan limit error if daily quota exceeded"
                     },
                     "response": []
                 },
@@ -662,7 +682,7 @@
                                 }
                             ]
                         },
-                        "description": "Get top queries by frequency.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Number of top queries to return (1-50, default: 10)\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns list of top queries with frequency and average confidence"
+                        "description": "Get top queries by frequency.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Requires `analytics_tier: 'full'` (available on Starter, Growth, Enterprise plans)\n- Free plan returns empty array with upgrade message\n- Returns 200 with empty data for basic tier plans\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Number of top queries to return (1-50, default: 10)\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns list of top queries with frequency and average confidence\n- Returns empty array for basic analytics tier (free plan)"
                     },
                     "response": []
                 },
@@ -695,7 +715,7 @@
                                 }
                             ]
                         },
-                        "description": "Get queries that may not have been answered well.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Number of queries to return (1-100, default: 20)\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns list of queries with low confidence or empty sources"
+                        "description": "Get queries that may not have been answered well.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Requires `analytics_tier: 'full'` (available on Starter, Growth, Enterprise plans)\n- Free plan returns empty array with upgrade message\n- Returns 200 with empty data for basic tier plans\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `limit` (optional): Number of queries to return (1-100, default: 20)\n- `days` (optional): Number of days to look back (1-365, default: 30)\n\n**Response:**\n- Returns list of queries with low confidence or empty sources\n- Returns empty array for basic analytics tier (free plan)"
                     },
                     "response": []
                 },
@@ -761,7 +781,7 @@
                                 }
                             ]
                         },
-                        "description": "Get all analytics sections in a single response.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `days` (optional): Number of days to look back (1-365, default: 30)\n- `top_limit` (optional): Number of top queries to return (1-50, default: 10)\n- `unanswered_limit` (optional): Number of unanswered queries to return (1-100, default: 20)\n\n**Response:**\n- Returns combined analytics data (summary, top_queries, unanswered, usage)"
+                        "description": "Get all analytics sections in a single response.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- `top_queries` and `unanswered` only included for `analytics_tier: 'full'` plans\n- Free plan (basic tier) returns empty arrays for top_queries and unanswered\n- `summary` and `usage` are available on all plans\n- Response includes `analytics_tier` field indicating plan's tier\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Query Parameters:**\n- `days` (optional): Number of days to look back (1-365, default: 30)\n- `top_limit` (optional): Number of top queries to return (1-50, default: 10)\n- `unanswered_limit` (optional): Number of unanswered queries to return (1-100, default: 20)\n\n**Response:**\n- Returns combined analytics data (summary, top_queries, unanswered, usage, analytics_tier)\n- `top_queries` and `unanswered` are empty arrays for basic tier plans"
                     },
                     "response": []
                 }
@@ -802,7 +822,7 @@
                                 "generate"
                             ]
                         },
-                        "description": "Generate an updated system prompt based on user feedback using AI.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `feedback` (required): User feedback about what needs to be updated in the system prompt\n\n**Response:**\n- Returns generated prompt (not saved to database)\n- Includes current_prompt, updated_prompt, and feedback\n- Use this to preview changes before saving"
+                        "description": "Generate an updated system prompt based on user feedback using AI.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Requires `train_enabled: true` (available on Starter, Growth, Enterprise plans)\n- Free plan returns 403 Forbidden with upgrade message\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `feedback` (required): User feedback about what needs to be updated in the system prompt\n\n**Response:**\n- Returns generated prompt (not saved to database)\n- Includes current_prompt, updated_prompt, and feedback\n- Use this to preview changes before saving\n- Returns 403 for free plan users"
                     },
                     "response": []
                 },
@@ -853,7 +873,7 @@
                                 "prompt-updates"
                             ]
                         },
-                        "description": "Create a new prompt update (saves to history).\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `new_prompt` (required): New system prompt text\n- `reason` (optional): Reason for the update (max 500 characters)\n- `auto_apply` (optional): Whether to automatically apply the update (default: false)\n  - If `true`: Prompt is saved and immediately applied to the bot\n  - If `false`: Prompt is saved to history but not applied (use Apply endpoint later)\n\n**Response:**\n- Returns created prompt update with ID\n- Automatically saves prompt_update_id to environment variable\n- If auto_apply=true, bot's system_prompt is updated immediately"
+                        "description": "Create a new prompt update (saves to history).\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Requires `train_enabled: true` (available on Starter, Growth, Enterprise plans)\n- Free plan returns 403 Forbidden with upgrade message\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `new_prompt` (required): New system prompt text\n- `reason` (optional): Reason for the update (max 500 characters)\n- `auto_apply` (optional): Whether to automatically apply the update (default: false)\n  - If `true`: Prompt is saved and immediately applied to the bot\n  - If `false`: Prompt is saved to history but not applied (use Apply endpoint later)\n\n**Response:**\n- Returns created prompt update with ID\n- Automatically saves prompt_update_id to environment variable\n- If auto_apply=true, bot's system_prompt is updated immediately\n- Returns 403 for free plan users"
                     },
                     "response": []
                 },
@@ -914,7 +934,7 @@
                                 "prompt"
                             ]
                         },
-                        "description": "Apply a prompt update to the bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `update_id` (required): ID of the prompt update to apply\n\n**Response:**\n- Returns updated bot with new system_prompt\n- Updates bot's system_prompt field in database\n- Use this to apply a previously saved prompt update"
+                        "description": "Apply a prompt update to the bot.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Requires `train_enabled: true` (available on Starter, Growth, Enterprise plans)\n- Free plan returns 403 Forbidden with upgrade message\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `update_id` (required): ID of the prompt update to apply\n\n**Response:**\n- Returns updated bot with new system_prompt\n- Updates bot's system_prompt field in database\n- Use this to apply a previously saved prompt update\n- Returns 403 for free plan users"
                     },
                     "response": []
                 },
@@ -949,7 +969,7 @@
                                 "revert"
                             ]
                         },
-                        "description": "Revert bot to a previous prompt version.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `update_id` (required): ID of the prompt update to revert to (uses old_prompt from that update)\n\n**Response:**\n- Returns updated bot with reverted system_prompt\n- Creates a new prompt update record for the revert action\n- Bot's system_prompt is set to the old_prompt from the specified update"
+                        "description": "Revert bot to a previous prompt version.\n\n**Authentication:** Required\n**Authorization:** Bot must belong to authenticated user\n**Plan Limits:**\n- Requires `train_enabled: true` (available on Starter, Growth, Enterprise plans)\n- Free plan returns 403 Forbidden with upgrade message\n- Error message includes plan details and upgrade contact email\n\n**Path Parameters:**\n- `bot_id`: Bot UUID\n\n**Request Body:**\n- `update_id` (required): ID of the prompt update to revert to (uses old_prompt from that update)\n\n**Response:**\n- Returns updated bot with reverted system_prompt\n- Creates a new prompt update record for the revert action\n- Bot's system_prompt is set to the old_prompt from the specified update\n- Returns 403 for free plan users"
                     },
                     "response": []
                 }

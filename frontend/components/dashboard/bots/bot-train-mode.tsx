@@ -18,10 +18,13 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { usePromptUpdates, useCreatePromptUpdate, useApplyPromptUpdate, useRevertPrompt, useGeneratePrompt } from "@/lib/query/hooks";
+import { usePlanFeatures } from "@/lib/query/hooks/plan";
 import { useNotifications } from "@/lib/hooks/use-notifications";
 import { formatDistanceToNow } from "date-fns";
 import type { Bot } from "@/lib/types/bot";
 import BotSandboxChat from "./bot-sandbox-chat";
+import { Mail } from "lucide-react";
+import Link from "next/link";
 
 interface BotTrainModeProps {
   bot: Bot;
@@ -34,6 +37,7 @@ export default function BotTrainMode({ bot }: BotTrainModeProps) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const { success, error: showError } = useNotifications();
+  const { trainEnabled, isLoading: planLoading } = usePlanFeatures();
   const { data: updates, isLoading: updatesLoading } = usePromptUpdates(bot.id, 50);
   const generatePrompt = useGeneratePrompt(bot.id);
   const createUpdate = useCreatePromptUpdate(bot.id);
@@ -117,6 +121,52 @@ export default function BotTrainMode({ bot }: BotTrainModeProps) {
       showError("Failed", "Failed to revert prompt");
     }
   };
+
+  // Show upgrade message if train feature is not enabled
+  if (!planLoading && !trainEnabled) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
+              <CardTitle>Train Mode</CardTitle>
+            </div>
+            <CardDescription>
+              Train Mode is only available on paid plans
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-6 border border-primary/20 rounded-lg bg-muted/50 text-center space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Train Mode allows you to improve your bot&apos;s system prompt using AI feedback.
+                This feature is available on Starter, Growth, and Enterprise plans.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Payments are coming soon, but if you&apos;d like to use paid features now,
+                please email us at{" "}
+                <Link
+                  href="mailto:info@singlebit.xyz"
+                  className="text-primary hover:underline font-medium"
+                >
+                  info@singlebit.xyz
+                </Link>
+                .
+              </p>
+              <div className="flex justify-center gap-2 pt-2">
+                <Link href="/payments-coming-soon">
+                  <Button variant="outline" className="gap-2">
+                    <Mail className="h-4 w-4" />
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -5,6 +5,7 @@
 // =====================================================
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNotifications } from "@/lib/hooks/use-notifications";
+import { extractErrorMessage, getErrorTitle } from "@/lib/utils/error-extractor";
 import type {
   WidgetToken,
   WidgetTokenCreateInput,
@@ -74,7 +75,9 @@ export function useCreateWidgetToken(botId: string) {
       );
     },
     onError: (err) => {
-      error("Creation Failed", err.message || "Failed to create widget token.");
+      const errorMessage = extractErrorMessage(err);
+      const errorTitle = getErrorTitle(err);
+      error(errorTitle, errorMessage);
     },
   });
 }
@@ -93,7 +96,9 @@ export function useRevokeWidgetToken(botId: string) {
       success("Token Revoked", "Widget token revoked successfully!");
     },
     onError: (err) => {
-      error("Revocation Failed", err.message || "Failed to revoke widget token.");
+      const errorMessage = extractErrorMessage(err);
+      const errorTitle = getErrorTitle(err);
+      error(errorTitle, errorMessage);
     },
   });
 }

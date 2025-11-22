@@ -188,7 +188,6 @@ class RagService:
         else:
             # Widget query: get bot without ownership check (token already validates access)
             # Use service role to bypass RLS
-            from config.supabasedb import get_supabase_client
             service_db = get_supabase_client(use_service_role=True)
             try:
                 result = service_db.table("bots").select("*").eq("id", str(bot_id)).single().execute()

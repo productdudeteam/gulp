@@ -225,7 +225,7 @@ class WidgetTokenService:
                             break
 
                     if not domain_match:
-                        logger.warning(f"Origin {origin} not in allowed domains for token {token_data['id']}")
+                        logger.warning(f"Origin {origin} not in allowed domains for token {token_data['id']}::{allowed_domains}")
                         return None
             else:
                 # If no allowed_domains configured, check environment

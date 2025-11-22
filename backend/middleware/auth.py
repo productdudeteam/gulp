@@ -106,35 +106,19 @@ class AuthMiddleware:
             if not token_data:
                 return None
             
-            # Try to validate the JWT token with Supabase first
             access_token = token_data.get("access_token")
-            if access_token:
-                try:
-                    user = self.supabase.auth.get_user(access_token)
-                    return user
-                except Exception:
-                    # JWT validation failed, use user data from token as fallback
-                    pass
-            
-            # Fallback: Use user data directly from token
-            user_data = token_data.get("user")
-            if user_data:
-                class MockUser:
-                    def __init__(self, user_data):
-                        self.user = type('User', (), {
-                            'id': user_data.get('id', 'unknown'),
-                            'email': user_data.get('email', 'unknown'),
-                            'created_at': user_data.get('created_at', 'unknown'),
-                            'updated_at': user_data.get('updated_at', 'unknown'),
-                            'user_metadata': user_data.get('user_metadata', {}),
-                            'app_metadata': user_data.get('app_metadata', {})
-                        })()
-                
-                return MockUser(user_data)
-            
-            return None
-                
-        except Exception:
+            if not access_token:
+                logger.warning("Access token missing from Supabase session cookie")
+                return None
+
+            try:
+                user = self.supabase.auth.get_user(access_token)
+                return user
+            except Exception as exc:
+                logger.warning("Supabase token validation failed: %s", exc)
+                return None
+        except Exception as exc:
+            logger.error("Unexpected auth middleware error: %s", exc)
             return None
 
 

@@ -47,6 +47,7 @@ class DatabaseManager:
 
 # Global database manager instance
 db_manager = DatabaseManager()
+_service_role_warning_emitted = False
 
 
 def get_supabase_client(access_token: Optional[str] = None, use_service_role: bool = False) -> Client:
@@ -78,7 +79,10 @@ def get_supabase_client(access_token: Optional[str] = None, use_service_role: bo
         if use_service_role:
             # Explicitly request service role (bypasses RLS)
             # Only use for admin operations, auth validation, etc.
-            logger.warning("Using service role client (RLS bypassed) - ensure this is intentional")
+            global _service_role_warning_emitted
+            if not _service_role_warning_emitted:
+                logger.warning("Using service role client (RLS bypassed) - ensure this is intentional")
+                _service_role_warning_emitted = True
             return db_manager.get_client()
         
         if not access_token:

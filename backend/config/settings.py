@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     # Application Settings
     app_name: str = Field(default="Niya API", env="APP_NAME")
     debug: bool = Field(default=False, env="DEBUG")
-    environment: str = Field(default="dev", env="ENVIRONMENT")
+    environment: str = Field(default="prod", env="ENVIRONMENT")
     
     # Rate Limiting
     rate_limit_per_minute: int = Field(default=60, env="RATE_LIMIT_PER_MINUTE")

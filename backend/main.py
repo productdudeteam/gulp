@@ -30,6 +30,9 @@ app = FastAPI(
 )
 
 # Add general CORS middleware for other endpoints
+logger.info(f"Configuring CORS with allowed origins: {settings.cors_origins}")
+# Use regex to allow any origin for now to debug the issue
+# This is safer than allow_origins=["*"] with allow_credentials=True
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,

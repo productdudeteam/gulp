@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
-from pydantic import Field
-from typing import Optional
+from pydantic import Field, field_validator
+from typing import Optional, List, Union
 import os
 
 
@@ -30,7 +30,26 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", env="LOG_LEVEL")
     
     # CORS Settings
-    cors_origins: list = Field(default=["http://localhost:3000"], env="CORS_ORIGINS")
+    cors_origins: Union[List[str], str] = Field(default=["http://localhost:3000"], env="CORS_ORIGINS")
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        origins = []
+        if isinstance(v, str) and not v.strip().startswith("["):
+            origins = [origin.strip() for origin in v.split(",")]
+        elif isinstance(v, list):
+            origins = v
+        else:
+            origins = []
+            
+        # Always ensure localhost is allowed for development convenience
+        default_origins = ["http://localhost:3000", "http://localhost:8000"]
+        for origin in default_origins:
+            if origin not in origins:
+                origins.append(origin)
+                
+        return origins
 
     # Embeddings
     embedding_preferred: str = Field(default="openai", env="EMBEDDING_PREFERRED")

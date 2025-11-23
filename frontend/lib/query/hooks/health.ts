@@ -30,8 +30,10 @@ export const useHealthStatus = () => {
     queryFn: async () => {
       const startTime = Date.now();
       try {
-        // Call backend health endpoint directly (bypasses Next.js proxy)
-        const response = await fetch("http://localhost:8000/health", {
+        // Call backend health endpoint
+        // Uses NEXT_PUBLIC_API_BASE_URL if set, otherwise uses relative path (via Next.js rewrite)
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+        const response = await fetch(`${apiUrl}/health`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

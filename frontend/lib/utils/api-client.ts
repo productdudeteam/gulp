@@ -1,3 +1,5 @@
+import { createClient } from "@/lib/supabase/client";
+
 // =====================================================
 // API CLIENT UTILITIES
 // =====================================================
@@ -31,26 +33,34 @@ function getApiBaseUrl(): string {
 
 /**
  * Make an API request to the backend
- * Automatically includes cookies for authentication
+ * Automatically includes Bearer token for authentication
  */
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
   const baseUrl = getApiBaseUrl();
-  const url = endpoint.startsWith("/") 
-    ? `${baseUrl}${endpoint}` 
+  const url = endpoint.startsWith("/")
+    ? `${baseUrl}${endpoint}`
     : `${baseUrl}/${endpoint}`;
+
+  // Get current session for Bearer token
+  const supabase = createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const token = session?.access_token;
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {}),
   };
 
   const response = await fetch(url, {
     ...options,
     headers,
-    credentials: "include", // Include cookies for authentication
+    // credentials: "include", // Cookie auth no longer primary, but kept for fallback if needed
   });
 
   // Parse response

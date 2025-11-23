@@ -80,7 +80,16 @@ def get_supabase_session_from_cookies(cookies: Mapping[str, str]) -> Optional[Di
 
 
 def get_access_token_from_request(request: Request) -> Optional[str]:
-    """Helper to pull the Supabase access token from the incoming request."""
+    """
+    Helper to pull the Supabase access token from the incoming request.
+    Checks Authorization header first (Bearer token), then falls back to cookies.
+    """
+    # 1. Check Authorization header
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        return auth_header.split(" ")[1]
+
+    # 2. Fallback to cookies
     token_data = get_supabase_session_from_cookies(request.cookies)
     if not token_data:
         return None
@@ -92,23 +101,18 @@ def get_access_token_from_request(request: Request) -> Optional[str]:
 
 
 class AuthMiddleware:
-    """Authentication middleware for Supabase cookie validation"""
+    """Authentication middleware for Supabase token validation"""
     
     def __init__(self):
         # Use service role for auth validation (legitimate admin operation)
         self.supabase = get_supabase_client(use_service_role=True)
     
-    async def get_current_user_from_cookie(self, request: Request) -> Optional[Dict[str, Any]]:
-        """Get current user from Supabase auth token cookie"""
+    async def get_current_user(self, request: Request) -> Optional[Dict[str, Any]]:
+        """Get current user from Supabase auth token (Header or Cookie)"""
         try:
-            token_data = get_supabase_session_from_cookies(request.cookies)
+            access_token = get_access_token_from_request(request)
             
-            if not token_data:
-                return None
-            
-            access_token = token_data.get("access_token")
             if not access_token:
-                logger.warning("Access token missing from Supabase session cookie")
                 return None
 
             try:

@@ -15,8 +15,8 @@ def auth_guard(func: Callable) -> Callable:
     @wraps(func)
     async def wrapper(request: Request, *args, **kwargs):
         try:
-            # Get user from cookie authentication
-            user = await auth_middleware.get_current_user_from_cookie(request)
+            # Get user from authentication (Header or Cookie)
+            user = await auth_middleware.get_current_user(request)
             
             if not user:
                 raise HTTPException(
@@ -64,8 +64,8 @@ def optional_auth_guard(func: Callable) -> Callable:
     @wraps(func)
     async def wrapper(request: Request, *args, **kwargs):
         try:
-            # Get user from cookie authentication
-            user = await auth_middleware.get_current_user_from_cookie(request)
+            # Get user from authentication (Header or Cookie)
+            user = await auth_middleware.get_current_user(request)
             
             if user:
                 # Extract user data based on user object type

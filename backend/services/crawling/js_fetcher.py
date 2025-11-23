@@ -1,9 +1,53 @@
 from typing import Dict
+import logging
+import subprocess
+import sys
+
+logger = logging.getLogger(__name__)
 
 
 class PlaywrightFetcher:
     def __init__(self, timeout_ms: int = 20000):
         self.timeout_ms = timeout_ms
+        self._browsers_checked = False
+
+    def _ensure_browsers_installed(self):
+        """Check if Playwright browsers are installed, install if missing"""
+        if self._browsers_checked:
+            return
+        
+        try:
+            from playwright.sync_api import sync_playwright
+            # Try to launch to verify browsers are installed
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                browser.close()
+            self._browsers_checked = True
+            logger.debug("Playwright browsers verified")
+        except Exception as e:
+            logger.warning(f"Playwright browsers not found, attempting installation: {e}")
+            try:
+                # Try to install chromium
+                subprocess.run(
+                    [sys.executable, "-m", "playwright", "install", "chromium"],
+                    check=True,
+                    capture_output=True,
+                    timeout=300  # 5 minute timeout
+                )
+                logger.info("Playwright browsers installed successfully")
+                self._browsers_checked = True
+            except subprocess.TimeoutExpired:
+                logger.error("Playwright browser installation timed out")
+                raise RuntimeError(
+                    "Playwright browsers installation timed out. "
+                    "Please install manually: playwright install chromium"
+                )
+            except Exception as install_error:
+                logger.error(f"Failed to install Playwright browsers: {install_error}")
+                raise RuntimeError(
+                    "Playwright browsers are not installed and automatic installation failed. "
+                    "Please install manually: playwright install chromium"
+                ) from install_error
 
     def fetch(self, url: str) -> Dict:
         try:
@@ -12,6 +56,9 @@ class PlaywrightFetcher:
             raise RuntimeError(
                 "Playwright is not installed. Install with `pip install playwright` and run `playwright install`."
             ) from e
+
+        # Ensure browsers are installed before attempting to use them
+        self._ensure_browsers_installed()
 
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)

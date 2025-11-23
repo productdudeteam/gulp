@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # Create FastAPI app
 app = FastAPI(
     title=settings.app_name,
-    description="Niya FastAPI Template - Production-ready backend with user authentication check",
+    description="Gulp API - Production-ready backend with user authentication check",
     version="1.0.0",
     debug=settings.debug
 )
@@ -92,7 +92,7 @@ async def health_check():
 @app.get("/")
 async def root():
     """Root endpoint"""
-    return {"status": "ok", "data": "Niya API", "version": "1.0.0"}
+    return {"status": "ok", "data": "Gulp API", "version": "1.0.0"}
 
 
 if __name__ == "__main__":

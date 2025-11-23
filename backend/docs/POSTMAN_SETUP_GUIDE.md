@@ -1,6 +1,6 @@
-# 📚 Postman Setup Guide for Niya API
+# 📚 Postman Setup Guide for Gulp API
 
-This guide will help you set up Postman to test the Niya API endpoints efficiently.
+This guide will help you set up Postman to test the Gulp API endpoints efficiently.
 
 ## 🚀 Quick Start
 
@@ -8,8 +8,8 @@ This guide will help you set up Postman to test the Niya API endpoints efficient
 
 1. **Download the files:**
 
-    - `postman/Niya_API.postman_collection.json` - API collection
-    - `postman/Niya_API.postman_environment.json` - Environment variables
+    - `postman/Gulp_API.postman_collection.json` - API collection
+    - `postman/Gulp_API.postman_environment.json` - Environment variables
 
 2. **Import into Postman:**
 
@@ -19,7 +19,7 @@ This guide will help you set up Postman to test the Niya API endpoints efficient
     - Select both files and click **Import**
 
 3. **Set up Environment:**
-    - In the top-right corner, select **"Niya API - Local Development"** environment
+    - In the top-right corner, select **"Gulp API - Local Development"** environment
     - Verify the `base_url` is set to `http://localhost:8000`
 
 ## 🔧 Environment Configuration
@@ -289,7 +289,7 @@ Data File: test-data.csv
 
 ```json
 {
-    "base_url": "https://staging-api.niya.com",
+    "base_url": "https://staging-api.gulp.com",
     "test_email": "staging@example.com"
 }
 ```
@@ -298,7 +298,7 @@ Data File: test-data.csv
 
 ```json
 {
-    "base_url": "https://api.niya.com",
+    "base_url": "https://api.gulp.com",
     "test_email": "prod@example.com"
 }
 ```

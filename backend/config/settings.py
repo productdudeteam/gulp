@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     cookie_samesite: str = Field(default="lax", env="COOKIE_SAMESITE")
     
     # Application Settings
-    app_name: str = Field(default="Niya API", env="APP_NAME")
+    app_name: str = Field(default="Gulp API", env="APP_NAME")
     debug: bool = Field(default=False, env="DEBUG")
     environment: str = Field(default="prod", env="ENVIRONMENT")
     

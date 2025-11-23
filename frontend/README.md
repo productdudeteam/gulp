@@ -1,4 +1,4 @@
-# 🚀 Niya - Modern Next.js Template for Developers & AI Startups
+# 🚀 Gulp - Modern Next.js App for AI Chatbots
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -6,65 +6,65 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-> **Niya** is a production-ready Next.js 15 template designed for developers and AI startups. Built with modern best practices, it includes authentication, state management, beautiful UI components, and everything you need to build scalable applications.
+> **Gulp** is a production-ready Next.js 15 application for building AI chatbots. Built with modern best practices, it includes authentication, state management, beautiful UI components, and everything you need to build scalable chatbot applications.
 
 ## ✨ Features
 
 ### 🛠️ **Modern Tech Stack**
 
--   **Next.js 15** with App Router and TypeScript
--   **Supabase** for authentication, database, and real-time features
--   **Tailwind CSS 4** for rapid UI development
--   **Zustand** for lightweight state management
--   **React Query** for server state management
--   **Zod** for runtime type validation
+- **Next.js 15** with App Router and TypeScript
+- **Supabase** for authentication, database, and real-time features
+- **Tailwind CSS 4** for rapid UI development
+- **Zustand** for lightweight state management
+- **React Query** for server state management
+- **Zod** for runtime type validation
 
 ### 🔐 **Authentication & Security**
 
--   Complete authentication system with Supabase Auth
--   Protected routes and middleware
--   Role-based access control
--   Email confirmation flow
--   Password reset functionality
+- Complete authentication system with Supabase Auth
+- Protected routes and middleware
+- Role-based access control
+- Email confirmation flow
+- Password reset functionality
 
 ### 🎨 **Beautiful UI Components**
 
--   **Magic UI** components for stunning animations
--   **Radix UI** primitives for accessibility
--   **Framer Motion** for smooth animations
--   Dark mode support
--   Responsive design
+- **Magic UI** components for stunning animations
+- **Radix UI** primitives for accessibility
+- **Framer Motion** for smooth animations
+- Dark mode support
+- Responsive design
 
 ### 📱 **Developer Experience**
 
--   Zero-config setup
--   Hot reload with Turbopack
--   ESLint and Prettier configuration
--   TypeScript strict mode
--   Comprehensive error handling
+- Zero-config setup
+- Hot reload with Turbopack
+- ESLint and Prettier configuration
+- TypeScript strict mode
+- Comprehensive error handling
 
 ### 🚀 **Production Ready**
 
--   Optimized for performance
--   SEO-friendly with metadata
--   Image optimization
--   Error boundaries
--   Loading states
+- Optimized for performance
+- SEO-friendly with metadata
+- Image optimization
+- Error boundaries
+- Loading states
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
--   Node.js 18+
--   npm, yarn, pnpm, or bun
+- Node.js 18+
+- npm, yarn, pnpm, or bun
 
 ### Installation
 
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/namanbarkiya/niya-saas-template.git
-cd niya-saas-template
+git clone https://github.com/namanbarkiya/gulp.git
+cd gulp
 ```
 
 2. **Install dependencies**
@@ -87,9 +87,9 @@ cp env-example.env .env.local
 
 4. **Configure Supabase**
 
--   Create a new project at [supabase.com](https://supabase.com)
--   Copy your project URL and anon key
--   Update `.env.local` with your credentials
+- Create a new project at [supabase.com](https://supabase.com)
+- Copy your project URL and anon key
+- Update `.env.local` with your credentials
 
 5. **Run the development server**
 
@@ -109,7 +109,7 @@ bun dev
 ## 📁 Project Structure
 
 ```
-niya-saas-template/
+gulp/
 ├── app/                    # Next.js 15 App Router
 │   ├── api/               # API routes
 │   ├── dashboard/         # Protected dashboard pages
@@ -136,24 +136,24 @@ niya-saas-template/
 
 ### For Developers
 
--   **Rapid Prototyping**: Get started quickly with a production-ready foundation
--   **Learning**: Study modern React and Next.js patterns
--   **Portfolio Projects**: Showcase your skills with a professional template
--   **Side Projects**: Build MVPs and side projects efficiently
+- **Rapid Prototyping**: Get started quickly with a production-ready foundation
+- **Learning**: Study modern React and Next.js patterns
+- **Portfolio Projects**: Showcase your skills with a professional template
+- **Side Projects**: Build MVPs and side projects efficiently
 
 ### For AI Startups
 
--   **AI Application Frontend**: Perfect foundation for AI-powered applications
--   **Dashboard Applications**: Built-in dashboard with authentication
--   **Real-time Features**: Supabase integration for real-time data
--   **Scalable Architecture**: Designed to grow with your business
+- **AI Application Frontend**: Perfect foundation for AI-powered applications
+- **Dashboard Applications**: Built-in dashboard with authentication
+- **Real-time Features**: Supabase integration for real-time data
+- **Scalable Architecture**: Designed to grow with your business
 
 ### For Teams
 
--   **Consistent Codebase**: Standardized patterns and practices
--   **Type Safety**: Full TypeScript support for better development experience
--   **Testing Ready**: Structured for easy testing implementation
--   **Deployment Ready**: Optimized for Vercel and other platforms
+- **Consistent Codebase**: Standardized patterns and practices
+- **Type Safety**: Full TypeScript support for better development experience
+- **Testing Ready**: Structured for easy testing implementation
+- **Deployment Ready**: Optimized for Vercel and other platforms
 
 ## 🛠️ Customization
 
@@ -163,16 +163,16 @@ The template uses Tailwind CSS for styling. You can customize the design system 
 
 ```javascript
 module.exports = {
-    theme: {
-        extend: {
-            colors: {
-                // Your custom colors
-            },
-            fontFamily: {
-                // Your custom fonts
-            },
-        },
+  theme: {
+    extend: {
+      colors: {
+        // Your custom colors
+      },
+      fontFamily: {
+        // Your custom fonts
+      },
     },
+  },
 };
 ```
 
@@ -192,10 +192,10 @@ For detailed technical information, see [Technical Description](./project-detail
 
 ### Architecture
 
--   **State Management**: Zustand for client state, React Query for server state
--   **Form Handling**: React Hook Form with Zod validation
--   **Error Handling**: Comprehensive error boundaries and toast notifications
--   **Performance**: Optimized with Next.js 15 features
+- **State Management**: Zustand for client state, React Query for server state
+- **Form Handling**: React Hook Form with Zod validation
+- **Error Handling**: Comprehensive error boundaries and toast notifications
+- **Performance**: Optimized with Next.js 15 features
 
 ## 🤝 Contributing
 
@@ -215,21 +215,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
--   [Next.js](https://nextjs.org/) - The React framework
--   [Supabase](https://supabase.com/) - The open source Firebase alternative
--   [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
--   [Magic UI](https://magicui.design/) - Beautiful UI components
--   [Radix UI](https://www.radix-ui.com/) - Unstyled, accessible UI primitives
+- [Next.js](https://nextjs.org/) - The React framework
+- [Supabase](https://supabase.com/) - The open source Firebase alternative
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [Magic UI](https://magicui.design/) - Beautiful UI components
+- [Radix UI](https://www.radix-ui.com/) - Unstyled, accessible UI primitives
 
 ## 📞 Support
 
--   **GitHub Issues**: [Report bugs or request features](https://github.com/namanbarkiya/niya-saas-template/issues)
--   **Discussions**: [Join the community](https://github.com/namanbarkiya/niya-saas-template/discussions)
--   **Author**: [Naman Barkiya](https://github.com/namanbarkiya)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/namanbarkiya/gulp/issues)
+- **Discussions**: [Join the community](https://github.com/namanbarkiya/gulp/discussions)
+- **Author**: [Naman Barkiya](https://github.com/namanbarkiya)
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=namanbarkiya/niya-saas-template&type=Date)](https://star-history.com/#namanbarkiya/niya-saas-template&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=namanbarkiya/gulp&type=Date)](https://star-history.com/#namanbarkiya/gulp&Date)
 
 ---
 

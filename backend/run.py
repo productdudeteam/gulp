@@ -25,7 +25,7 @@ if __name__ == "__main__":
             port = find_available_port()
             print(f"✅ Using port {port}")
         
-        print(f"🚀 Starting Niya FastAPI Template on http://localhost:{port}")
+        print(f"🚀 Starting Gulp API on http://localhost:{port}")
         print(f"📚 API Documentation: http://localhost:{port}/docs")
         print(f"🔄 Auto-reload enabled")
         print("Press Ctrl+C to stop the server")

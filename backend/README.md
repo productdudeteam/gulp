@@ -1,12 +1,12 @@
-# Niya FastAPI Template
+# Gulp API Backend
 
-A production-ready FastAPI backend template with Supabase authentication, rate limiting, and comprehensive architecture. Built for developers who want to get started quickly with a robust, scalable backend solution.
+A production-ready FastAPI backend with Supabase authentication, rate limiting, and comprehensive architecture. Built for developers who want to get started quickly with a robust, scalable backend solution.
 
 ## 🚀 Quick Start
 
-### What is Niya?
+### What is Gulp?
 
-Niya is a **production-ready FastAPI template** that provides everything you need to build scalable, secure, and maintainable backend applications. It's designed for developers who want to focus on building features rather than setting up infrastructure.
+Gulp is a **production-ready FastAPI backend** that provides everything you need to build scalable, secure, and maintainable applications. It's designed for developers who want to focus on building features rather than setting up infrastructure.
 
 ### Key Features
 
@@ -27,8 +27,8 @@ Niya is a **production-ready FastAPI template** that provides everything you nee
 1. **Clone the repository**
 
 ```bash
-git clone <your-repo-url>
-cd niya-fastapi
+git clone https://github.com/namanbarkiya/gulp.git
+cd gulp
 ```
 
 2. **Create virtual environment**
@@ -127,7 +127,7 @@ python run.py
 ### Project Structure
 
 ```
-niya-fastapi/
+gulp/
 ├── config/          # Configuration & database
 ├── core/           # Exceptions & logging
 ├── middleware/     # Auth & rate limiting
@@ -157,11 +157,13 @@ See `NEW_FEATURE_GUIDE.md` for detailed instructions on adding features.
 ### Docker (Recommended)
 
 A `Dockerfile` is provided that includes:
-- System dependencies for Playwright
-- Python packages
-- Playwright browser installation
+
+-   System dependencies for Playwright
+-   Python packages
+-   Playwright browser installation
 
 **Build and run:**
+
 ```bash
 docker build -t gulp-backend .
 docker run -p 8000:8000 gulp-backend
@@ -180,9 +182,9 @@ Works on Railway, Heroku, AWS, GCP, Azure, Fly.io, Render, and any Docker-compat
 -   **New Features**: See `NEW_FEATURE_GUIDE.md`
 -   **Interactive API Docs**: Available at `http://localhost:8000/docs` when running
 
-## 🎯 Why Niya?
+## 🎯 Why Gulp?
 
-Niya is designed to be the go-to FastAPI template for developers who want to:
+Gulp is designed to be a production-ready backend for developers who want to:
 
 -   **Start quickly** with a production-ready backend
 -   **Scale efficiently** with proven architecture patterns

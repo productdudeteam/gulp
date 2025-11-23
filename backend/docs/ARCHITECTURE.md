@@ -2,7 +2,7 @@
 
 ## Overview
 
-Niya FastAPI Template follows a **Clean Architecture** pattern with **FastAPI** and **Supabase** integration. The system is designed for scalability, security, and maintainability, making it perfect for production-ready applications.
+Gulp API follows a **Clean Architecture** pattern with **FastAPI** and **Supabase** integration. The system is designed for scalability, security, and maintainability, making it perfect for production-ready applications.
 
 ## 🏛️ Architecture Pattern
 
@@ -21,7 +21,7 @@ Niya FastAPI Template follows a **Clean Architecture** pattern with **FastAPI** 
 ## 📁 Folder Structure
 
 ```
-niya-fastapi/
+gulp/
 ├── config/                    # Configuration & Database
 │   ├── __init__.py
 │   ├── settings.py           # Environment configuration
@@ -54,8 +54,8 @@ niya-fastapi/
 │   ├── API_QUICK_REFERENCE.md # Quick reference
 │   └── ARCHITECTURE.md      # Architecture guide
 ├── postman/                 # Postman Files
-│   ├── Niya_API.postman_collection.json    # API collection
-│   └── Niya_API.postman_environment.json   # Environment variables
+│   ├── Gulp_API.postman_collection.json    # API collection
+│   └── Gulp_API.postman_environment.json   # Environment variables
 ├── main.py                  # Application entry point
 ├── requirements.txt         # Dependencies
 └── .env                     # Environment variables

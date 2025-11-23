@@ -1,7 +1,7 @@
 {
-  "name": "niya-nextjs-template",
+  "name": "gulp-frontend",
   "version": "1.0.0",
-  "description": "Production-ready Next.js 15 template for developers and AI startups with authentication, state management, and beautiful UI components",
+  "description": "Gulp - AI Chatbot Platform with Next.js 15, authentication, state management, and beautiful UI components",
   "keywords": [
     "nextjs",
     "react",
@@ -24,11 +24,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/namanbarkiya/niya-saas-template.git"
+    "url": "https://github.com/namanbarkiya/gulp.git"
   },
-  "homepage": "https://saas.nbarkiya.xyz",
+  "homepage": "https://gulp.com",
   "bugs": {
-    "url": "https://github.com/namanbarkiya/niya-saas-template/issues"
+    "url": "https://github.com/namanbarkiya/gulp/issues"
   },
   "private": true,
   "scripts": {
